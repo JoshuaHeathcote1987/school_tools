@@ -27,7 +27,7 @@
                     <label for="exampleFormControlSelect1"><h3 style="font-family: 'Orelega One', cursive;">Teacher</h3></label>
                     <select class="form-control" id="exampleFormControlSelect1">
                         @foreach($teachers as $teacher)
-                            <option wire:click="setTeacher('{{$teacher->id}}', '{{$teacher->name}}', '{{$teacher->surname}}')">{{$teacher->name}}</option>
+                            <option wire:click="setTeacher('{{$teacher->id}}', '{{$teacher->name}}', '{{$teacher->surname}}')" value="">{{$teacher->name}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -65,15 +65,15 @@
                                 <div class="form-check">
                                     
                                     <input class="form-check-input" type="checkbox" wire:click="addAttendanceRecord('{{$student->id}}', '{{$i}}')" 
-                                    
+
                                         @foreach($attendances as $attendance)
                                             @if($student->id == $attendance->student_id && $attendance->day == $i)
                                                 checked
-                                                {{$student->id}}
                                             @endif
                                         @endforeach
                                     
                                     >
+                                    
                                     
                                 <div>
                             </td>

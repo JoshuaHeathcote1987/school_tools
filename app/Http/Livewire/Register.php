@@ -93,11 +93,23 @@ class Register extends Component
     public function setMonth($month) 
     {
         $this->month = $month;
+
+        $this->attendances = DB::table('attendances')
+        ->where('attendances.teacher_id', '=', 1)
+        ->where('attendances.month', '=', $this->month)
+        ->where('attendances.year', '=', 2021)
+        ->get();
     }
 
     public function setYear($year)
     {
         $this->year = $year;
+
+        $this->attendances = DB::table('attendances')
+        ->where('attendances.teacher_id', '=', 1)
+        ->where('attendances.month', '=', $this->month)
+        ->where('attendances.year', '=', $this->year)
+        ->get();
     }
 
     public function setTeacher($teacherId, $teacherName, $teacherSurname)
@@ -105,6 +117,13 @@ class Register extends Component
         $this->teacherName = $teacherName;
         $this->teacherSurname = $teacherSurname;
         $this->teacherId = $teacherId;
+
+        $this->attendances = DB::table('attendances')
+        ->where('attendances.teacher_id', '=', $this->teacherId)
+        ->where('attendances.month', '=', $this->month)
+        ->where('attendances.year', '=', $this->year)
+        ->get();
+
     }
 
     public function addTeacher()
@@ -167,6 +186,12 @@ class Register extends Component
                 'year' => $this->year,
             ]);
         }
+
+        $this->attendances = DB::table('attendances')
+        ->where('attendances.teacher_id', '=', $this->teacherId)
+        ->where('attendances.month', '=', $this->month)
+        ->where('attendances.year', '=', $this->year)
+        ->get();
 
     }
 
