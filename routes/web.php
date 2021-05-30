@@ -2,6 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\AttendanceExportController;
+
+use App\Http\Livewire\Register;
+use App\Http\Livewire\Inventory;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,6 +21,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/attendance', Register::class);
+Route::get('/inventory', Inventory::class);
+
+Route::get('/attendance/export', [AttendanceExportController::class, 'export'])->name('export');
 
 Auth::routes();
 

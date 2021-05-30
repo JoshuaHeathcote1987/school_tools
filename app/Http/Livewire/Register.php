@@ -3,23 +3,26 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
-
 use App\Models\Teacher;
 use App\Models\Student;
 use App\Models\Attendance;
 use App\Models\Classroom;
-
+use App\Exports\AttendanceExport;
+use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
-
 use DB;
 
 class Register extends Component
 {
+    public $message = false;
+
+    public $name;
 
     public $students;
     public $teachers;
     public $attendances;
 
+    public $teacher;
     public $teacherId;
     public $teacherName;
     public $teacherSurname;
@@ -27,6 +30,8 @@ class Register extends Component
     public $studentId;
     public $studentName;
     public $studentSurname;
+
+    public $studentSelected;
 
     public $months = array(
         'January',
@@ -39,7 +44,7 @@ class Register extends Component
         'August',
         'September',
         'October',
-        'Novermber',
+        'November',
         'December',
     );
 
@@ -50,7 +55,6 @@ class Register extends Component
 
     public $date;
 
-    // EDIT USER FUNCTIONALITY
     public $arrowLeft = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 448 512\"><!-- Font Awesome Free 5.15.3 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d=\"M257.5 445.1l-22.2 22.2c-9.4 9.4-24.6 9.4-33.9 0L7 273c-9.4-9.4-9.4-24.6 0-33.9L201.4 44.7c9.4-9.4 24.6-9.4 33.9 0l22.2 22.2c9.5 9.5 9.3 25-.4 34.3L136.6 216H424c13.3 0 24 10.7 24 24v32c0 13.3-10.7 24-24 24H136.6l120.5 114.8c9.8 9.3 10 24.8.4 34.3z\"/></svg>";
     public $arrowRight = "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 448 512\"><!-- Font Awesome Free 5.15.3 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d=\"M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z\"/></svg>";
     public $arrowPointing;
@@ -64,6 +68,8 @@ class Register extends Component
         'students.name' => 'required|string|max:50',
         'students.surname' => 'required|string|max:50',
     ];
+
+    // ============== Methods ==============
 
     public function showUserEditTools()
     {
@@ -90,73 +96,107 @@ class Register extends Component
         }
     }
 
-    public function setMonth($month) 
-    {
-        $this->month = $month;
-
-        $this->attendances = DB::table('attendances')
-        ->where('attendances.teacher_id', '=', 1)
-        ->where('attendances.month', '=', $this->month)
-        ->where('attendances.year', '=', 2021)
-        ->get();
-    }
-
-    public function setYear($year)
-    {
-        $this->year = $year;
-
-        $this->attendances = DB::table('attendances')
-        ->where('attendances.teacher_id', '=', 1)
-        ->where('attendances.month', '=', $this->month)
-        ->where('attendances.year', '=', $this->year)
-        ->get();
-    }
-
-    public function setTeacher($teacherId, $teacherName, $teacherSurname)
-    {
-        $this->teacherName = $teacherName;
-        $this->teacherSurname = $teacherSurname;
-        $this->teacherId = $teacherId;
-
-        $this->attendances = DB::table('attendances')
-        ->where('attendances.teacher_id', '=', $this->teacherId)
-        ->where('attendances.month', '=', $this->month)
-        ->where('attendances.year', '=', $this->year)
-        ->get();
-
-    }
-
     public function addTeacher()
     {
-        $name = $this->teacherName;
-        $surname = $this->teacherSurname;
-        $teacher = new Teacher();
-        $teacher->name = $name;
-        $teacher->surname = $surname;
-        $teacher->save();
-        $this->teachers = DB::table('teachers')->orderBy('name', 'ASC')->get();
-
-        $this->teacherName = null;
-        $this->teacherSurname = null;
+        try
+        {
+            $name = $this->teacherName;
+            $surname = $this->teacherSurname;
+            $teacher = new Teacher();
+            $teacher->name = $name;
+            $teacher->surname = $surname;
+            $teacher->save();
+            $this->teachers = Teacher::orderBy('name', 'ASC')->get();  
+        }
+        catch (\Throwable $th) 
+        {
+            $this->message = true;
+        }
     }
 
     public function addStudent()
     {
-        $student = Student::create([
-            'name' => $this->studentName,
-            'surname' => $this->studentSurname,
-        ]);
+        try{
+            $teacher = json_decode($this->teacher);
 
-        $attendance = Attendance::create([
-            'teacher_id' => $this->teacherId,
-            'student_id' => $student->id,
-            'day' => date("d"),
-            'month' => $this->month,
-            'year' => $this->year,
-        ]);
+            $studentName = $this->studentName;
+            $studentSurname = $this->studentSurname;
+    
+            $student = Student::create([
+                'name' => $studentName,
+                'surname' => $studentSurname,
+            ]);
+    
+            $attendance = Attendance::create([
+                'teacher_id' => $teacher->id,
+                'student_id' => $student->id,
+                'day' => date('d'),
+                'month' => $this->month,
+                'year' => $this->year,
+            ]);
 
-        $this->studentName = null;
-        $this->studentSurname = null;
+            $this->getAttendanceRecords();
+
+            $this->studentName = null;
+            $this->studentSurname = null;
+        }
+        catch (\Throwable $th) 
+        {
+            $this->message = true;
+        }
+    }
+
+    public function editStudent()
+    {
+        try
+        {
+            $student = json_decode($this->studentSelected[0]);
+            $student = Student::find($student->id);
+            $student->name = $this->studentName;
+            $student->surname = $this->studentSurname;
+            $student->save();
+
+            $this->students = Student::with('attendance')->whereHas('attendance', function ($query) {
+                $query->where('teacher_id', $this->teacherId);
+            })->get();
+
+            $this->attendances = DB::table('attendances')
+                ->where('attendances.teacher_id', '=', $this->teacherId)
+                ->where('attendances.month', '=', $this->month)
+                ->where('attendances.year', '=', $this->year)
+                ->get();
+
+            $this->studentName = null;
+            $this->studentSurname = null; 
+        } 
+        catch (\Throwable $th) 
+        {
+            $this->message = true;
+        }
+    }
+
+    public function deleteStudent()
+    {
+        try
+        {
+            $student = json_decode($this->studentSelected[0]);
+            $student = Student::find($student->id);
+            $student->delete();
+
+            $this->students = Student::with('attendance')->whereHas('attendance', function ($query) {
+                $query->where('teacher_id', $this->teacherId);
+            })->get();
+
+            $this->attendances = DB::table('attendances')
+                ->where('attendances.teacher_id', '=', $this->teacherId)
+                ->where('attendances.month', '=', $this->month)
+                ->where('attendances.year', '=', $this->year)
+                ->get();
+        } 
+        catch (\Throwable $th) 
+        {
+            $this->message = true;
+        }
     }
 
     public function addAttendanceRecord($studentId, $day)
@@ -166,7 +206,6 @@ class Register extends Component
         $day = $day;
         $month = $this->month;
         $year = $this->year;
-
 
         try {
             $attendance = Attendance::where('teacher_id', $teacherId)
@@ -187,16 +226,44 @@ class Register extends Component
             ]);
         }
 
-        $this->attendances = DB::table('attendances')
-        ->where('attendances.teacher_id', '=', $this->teacherId)
-        ->where('attendances.month', '=', $this->month)
-        ->where('attendances.year', '=', $this->year)
-        ->get();
-
     }
 
-    public function getStudents()
+    public function getAttendanceRecords()
     {
+        try
+        {
+            $teacher = json_decode($this->teacher);
+            $this->teacherId = $teacher->id;
+            $month = $this->convertMonth($this->month);
+            $year = $this->year;
+    
+            $this->days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    
+            $this->students = Student::with('attendance')->whereHas('attendance', function ($query) {
+                $query->where('teacher_id', $this->teacherId);
+            })->get();
+    
+            $this->attendances = DB::table('attendances')
+                ->where('attendances.teacher_id', '=', $this->teacherId)
+                ->where('attendances.month', '=', $this->month)
+                ->where('attendances.year', '=', $this->year)
+                ->get();
+        }
+        catch (\Throwable $th) 
+        {
+            $this->message = true;
+        } 
+    }
+
+    public function export()
+    {
+        $teacher = json_decode($this->teacher);
+        $this->teacherId = $teacher->id;
+        $this->name = $teacher->name;
+        $month = $this->convertMonth($this->month);
+
+        $this->days = cal_days_in_month(CAL_GREGORIAN, $month, $this->year);
+
         $this->students = Student::with('attendance')->whereHas('attendance', function ($query) {
             $query->where('teacher_id', $this->teacherId);
         })->get();
@@ -206,19 +273,23 @@ class Register extends Component
             ->where('attendances.month', '=', $this->month)
             ->where('attendances.year', '=', $this->year)
             ->get();
+
+        $data = array(
+            'days' => $this->days,
+            'students' => $this->students,
+            'attendances' => $this->attendances,
+            'name' => $this->name,
+            'month' => $this->month
+        );
+
+        return Excel::download(new AttendanceExport($data), $this->name.'_'.$this->month.'_'.$this->year.'.xlsx');
     }
 
-    public function getAttendanceRecords()
-    {
-        $teacherId = $this->teacherId;
-        $month = $this->month;
-        $year = $this->year;
 
-        $this->attendances = DB::table('attendances')
-            ->where('teacher_id', '=', $teacherId)
-            ->where('month'. '=', $month)
-            ->where('year', '=', $year);
-    }
+
+// ============== Livewire Event Cycle ==============
+
+
 
     public function mount()
     {
@@ -229,9 +300,75 @@ class Register extends Component
         $this->arrowPointing = $this->arrowLeft;
     }
 
+    public function hydrate()
+    {
+        try
+        {
+            $this->attendances = DB::table('attendances')
+            ->where('attendances.teacher_id', '=', $this->teacherId)
+            ->where('attendances.month', '=', $this->month)
+            ->where('attendances.year', '=', $this->year)
+            ->get();
+        }
+        catch (\Throwable $th)
+        {
+            $this->message = true;
+        }
+    }
 
     public function render()
     {
         return view('livewire.register');
+    }
+
+
+
+// ============== Functions ==============
+
+
+
+    public function convertMonth($month)
+    {
+        switch($month)
+        {        
+            case 'January': 
+                $month = 1;
+                break;
+            case 'February': 
+                $month = 2;
+                break;
+            case 'March': 
+                $month = 3;
+                break;
+            case 'April': 
+                $month = 4;
+                break;            
+            case 'May': 
+                $month = 5;
+                break;
+            case 'June': 
+                $month = 6;
+                break;
+            case 'July': 
+                $month = 7;
+                break;
+            case 'August': 
+                $month = 8;
+                break;            
+            case 'September': 
+                $month = 9;
+                break;
+            case 'October': 
+                $month = 10;
+                break;
+            case 'November': 
+                $month = 11;
+                break;
+            case 'December': 
+                $month = 12;
+                break;         
+        }
+
+        return $month;
     }
 }
