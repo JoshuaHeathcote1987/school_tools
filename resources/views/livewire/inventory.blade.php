@@ -3,7 +3,9 @@
     {{-- A good traveler has no fixed plans and is not intent upon arriving. --}}
     <div class="row mt-3 mr-1">
         <div class="col-lg-12 mr-0 pr-0 float-right">
-            <button type="button" class="btn btn-primary float-right"><i class='far fa-plus-square'></i></button>
+            <button type="button" class="btn float-right" style="background-color: #c3e6cb;">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" style="width: 25px;"><!-- Font Awesome Free 5.15.3 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+            </button>
         </div>
     </div>
 
@@ -14,7 +16,7 @@
     <div class="row px-3">
         <div class="col-lg-6 mx-auto mb-4">
             <div class="row border border-bottom-0 border-right-0 border-danger shadow-sm">
-                <button type="button" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" class="col-lg-4 border-right border-danger text-center" style="height: 100px;" data-toggle="modal" data-target="#showContentModal">1</button>
+                <button type="button" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" class="col-lg-4 border-right border-danger text-center" style="height: 100px;" data-toggle="modal" data-target="#showContentModal" wire:model.defer="shelfNum">1</button>
                 <button onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" class="col-lg-4 border-right border-danger text-center" style="height: 100px;">2</button>
                 <button onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" class="col-lg-4 text-center" style="height: 100px;">3</button>
             </div>
@@ -84,9 +86,9 @@
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: #bee5eb; border-bottom: 1px solid #404040;">
-                        <h5 class="modal-title" id="exampleModalLabel">A1</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">A{{$shelfNum}}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                            <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
 
@@ -105,22 +107,37 @@
                                 <th scope="row">1</th>
                                 <td>Paint - Red</td>
                                 <td>2</td>
-                                <td>+ -</td>
-                                <td>+</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-danger">-</button>
+                                    <button type="button" class="btn btn-outline-success">+</button> 
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-info">?</button>
+                                </td>
                               </tr>
                               <tr>
                                 <th scope="row">2</th>
                                 <td>Paint - Blue</td>
                                 <td>3</td>
-                                <td>+ -</td>
-                                <td>+</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-danger">-</button>
+                                    <button type="button" class="btn btn-outline-success">+</button> 
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-info">?</button>
+                                </td>
                               </tr>
                               <tr>
                                 <th scope="row">3</th>
                                 <td>Paint - Yellow</td>
                                 <td>6</td>
-                                <td>+ -</td>
-                                <td>+</td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-danger">-</button>
+                                    <button type="button" class="btn btn-outline-success">+</button> 
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-info">?</button>
+                                </td>
                               </tr>
                             </tbody>
                         </table>
