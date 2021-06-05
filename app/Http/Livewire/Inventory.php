@@ -10,9 +10,9 @@ class Inventory extends Component
     public $shelfNum = 0;
     
     // Methods
-    public function changeShelfNum($num)
+    public function setShelfNum($x)
     {
-        $this->shelfNum = $num;
+        $this->shelfNum = $x;
     }
 
     // Functions

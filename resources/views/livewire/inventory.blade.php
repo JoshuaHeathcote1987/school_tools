@@ -16,7 +16,7 @@
     <div class="row px-3">
         <div class="col-lg-6 mx-auto mb-4">
             <div class="row border border-bottom-0 border-right-0 border-danger shadow-sm">
-                <button type="button" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" class="col-lg-4 border-right border-danger text-center" style="height: 100px;" data-toggle="modal" data-target="#showContentModal" wire:model.defer="shelfNum">1</button>
+                <button type="button" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" class="col-lg-4 border-right border-danger text-center" style="height: 100px;" data-toggle="modal" data-target="#showContentModal" wire:click="setShelfNum(1)">1</button>
                 <button onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" class="col-lg-4 border-right border-danger text-center" style="height: 100px;">2</button>
                 <button onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" class="col-lg-4 text-center" style="height: 100px;">3</button>
             </div>
@@ -30,7 +30,6 @@
                 <button onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" class="col-lg-4 text-center" style="height: 100px;">9</button>
             </div>
         </div>
-
         <div class="col-lg-6 mx-auto mb-4">
             <div class="row border border-bottom-0 border-right-0 border-danger shadow-sm">
                 <button onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" class="col-lg-4 border-right border-danger text-center" style="height: 100px;">10</button>
@@ -144,7 +143,7 @@
               
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" wire:click="">Save changes</button>
+                        <button type="button" class="btn btn-primary" wire:click="">Save changes</button>
                     </div>
                 </div>
             </div>
