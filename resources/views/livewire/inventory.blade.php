@@ -8,11 +8,20 @@
             </button>
         </div>
     </div>
+</div>
 
-    <div class="row">
-        <h2 class="ml-3">A</h2>
+    <div class="row col-lg-6 mx-auto">
+        <h4 class="mx-auto">Shelf Selection</h4>
     </div>
 
+    <div class="row col-lg-6 mx-auto mb-3">
+        <div class="btn-group-lg mx-auto" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-primary border border-dark">A</button>
+            <button type="button" class="btn btn-warning border border-dark">B</button>
+            <button type="button" class="btn btn-danger border border-dark">C</button>
+        </div>
+    </div>
+    
     <div class="row px-3">
         <div class="col-lg-4 mb-4">
             <div class="row border border-bottom-0 border-right-0 border-danger shadow-sm">
@@ -185,38 +194,33 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group row">
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <label for="" class="col-sm-2 col-form-label text-right">Name</label>
                             </div>
-                            <div class="col-lg-9">
+                            <div class="col-lg-8">
                                 <input type="text" class="form-control" wire:model.defer="itemName">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-lg-3">
+                            <div class="col-lg-4">
                                 <label for="" class="col-sm-2 col-form-label text-right">Amount</label>
                             </div>
-                            <div class="col-lg-9">
+                            <div class="col-lg-8">
                                 <input type="text" class="form-control" wire:model.defer="itemAmount">
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-lg-3">
-                                <label for="" class="col-sm-2 col-form-label text-right">Letter</label>
+                            <div class="col-lg-4">
+                                <label for="" class="col-sm-2 col-form-label text-right">Section</label>
                             </div>
-                            <div class="col-lg-9">
+                            <div class="col-lg-4">
                                 <select class="form-control" id="exampleFormControlSelect2">
                                     <option>A</option>
                                     <option>B</option>
                                     <option>C</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="form-group row">
-                            <div class="col-lg-3">
-                                <label for="" class="col-sm-2 col-form-label text-right">Number</label>
-                            </div>
-                            <div class="col-lg-9">
+                            <div class="col-lg-4">
                                 <select class="form-control" id="exampleFormControlSelect2">
                                     <option>1</option>
                                     <option>2</option>
