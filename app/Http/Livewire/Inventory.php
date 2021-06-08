@@ -3,27 +3,41 @@
 namespace App\Http\Livewire;
 
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Inventory extends Component
 {
     // Variables
-    public $numberOfShelfs = 17;
     public $shelfLetter = 'A';
     public $shelfNum = 0;
 
+    // Item
+    public $itemName, $itemAmount, $itemLetter, $itemNumber, $itemImg;
+
+    public $displayAddItemFormImageText = "Hello world";
     
     // Methods
-
-    
     public function setShelfContents($letter, $num)
     {
         $this->shelfLetter = $letter;
         $this->shelfNum = $num;
+    }
 
-       
+    public function addItem()
+    {
+        $item = array(
+            'name' => $this->itemName,
+            'amount' => $this->itemAmount,
+            'letter' => $this->itemLetter,
+            'number' => $this->itemNumber,
+            'img' => $this->itemImg, 
+        );
+
+        dd($item);
     }
 
     // Functions
+
     
     // Life Cycle
     public function hydrate()
@@ -33,10 +47,7 @@ class Inventory extends Component
 
     public function mount()
     {
-        if($this->shelfNum != 0)
-        {
-            $this->shelfNum = 4;
-        }
+
     }
 
     public function render()
