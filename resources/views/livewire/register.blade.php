@@ -63,7 +63,6 @@
     @if(!$students == null)
         <h4 class="float-right" style="font-family: 'Orelega One', cursive;">{{$date}}</h4>
 
-
         <table class="table table-hover table-sm mb-4" style="border-left: 0px solid black; border-right: 0px solid black; border-bottom: 0px solid black; border-top: 0px solid black;">
             
             <thead>

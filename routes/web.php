@@ -18,7 +18,8 @@ use App\Http\Livewire\Inventory;
 |
 */
 
-Route::get('/', Register::class);
+Route::view('/', 'welcome');
+
 Route::get('/attendance', Register::class);
 Route::get('/inventory', Inventory::class);
 

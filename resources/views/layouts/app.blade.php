@@ -20,19 +20,29 @@
     </style>
 
     <style>
-        body 
-        {
-            font-family: 'Nunito', sans-serif;
+        body {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
 
-            background-color: #ffffff;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 200 200'%3E%3Cpolygon fill='%23DCEFFA' points='100 0 0 100 100 100 100 200 200 100 200 0'/%3E%3C/svg%3E");
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
     </style>
 
     @livewireStyles
 </head>
 <body class="antialiased">
-
+    
     <div class="container mt-4 mb-4 bg-white shadow-sm" style="border-top: 1px solid #e0e0e0; border-right: 1px solid #e0e0e0; border-bottom: 1px solid #b0b0b0; border-left: 1px solid #e0e0e0;">
         {{$slot}}
     </div>

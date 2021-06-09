@@ -8,8 +8,8 @@ use Livewire\WithFileUploads;
 class Inventory extends Component
 {
     // Variables
-    public $shelfLetter = 'A';
-    public $shelfNum = 0;
+    //Shelf
+    public $shelfLetter, $shelfNum;
 
     // Item
     public $itemName, $itemAmount, $itemLetter, $itemNumber, $itemImg;
@@ -47,7 +47,13 @@ class Inventory extends Component
 
     public function mount()
     {
-
+        $this->shelfLetter = 'A';
+        $this->shelfNum = 1;
+        $this->itemName;
+        $this->itemAmount; 
+        $this->itemLetter = $this->shelfLetter; 
+        $this->itemNumber = 1; 
+        $this->itemImg;
     }
 
     public function render()

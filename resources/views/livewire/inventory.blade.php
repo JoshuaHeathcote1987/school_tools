@@ -2,7 +2,13 @@
 
     {{-- A good traveler has no fixed plans and is not intent upon arriving. --}}
     <div class="row mt-3 mr-1 mb-3">
-        <div class="col-lg-12 mr-0 pr-0 float-right">
+        <div class="col-lg-12 mb-3">
+            <div class="form-inline">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </div>
+        </div>
+        <div class="col-lg-12 mr-0 pr-0">
             <button type="button" class="btn" style="width: 5%; height: auto; background-color:#ab6363; border: 1px solid black;  height: 100%;">A</button>
             <button type="button" class="btn" style="width: 5%; height: auto; background-color:#aba463; border: 1px solid black;  height: 100%;">B</button>
             <button type="button" class="btn" style="width: 5%; height: auto; background-color:#ab63ab; border: 1px solid black;  height: 100%;">C</button>
@@ -49,8 +55,8 @@
         <div class="col-lg-4 mx-auto mb-4">
             <div class="row border border-bottom-0 border-right-0 border-left-0 border-danger shadow-sm">
                 <div class="col-lg-4 px-0">
-                    <button onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="height: 152px; width: 100%; border-bottom: 1px solid red; border-right: 1px solid red; background-color: white;" data-toggle="modal" data-target="#showContentModal(1)" data-toggle="modal" data-target="#showContentModal" wire:click="setShelfContents('A', 16)">16</button>
-                    <button onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="height: 151px; width: 100%; border-bottom: 1px solid red; border-right: 1px solid red; background-color: white;" data-toggle="modal" data-target="#showContentModal(17)">17</button>
+                    <button onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="height: 152px; width: 100%; border-bottom: 1px solid red; border-right: 1px solid red; background-color: white;" data-toggle="modal" data-target="#showContentModal" wire:click="setShelfContents('A', 16)">16</button>
+                    <button onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="height: 151px; width: 100%; border-bottom: 1px solid red; border-right: 1px solid red; background-color: white;" data-toggle="modal" data-target="#showContentModal" wire:click="setShelfContents('A', 17)">17</button>
                 </div>
                 <div class="col-lg-4 px-0">
                     <button onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="height: 101px; width: 100%; border-bottom: 1px solid red; border-right: 1px solid red; background-color: white;" data-toggle="modal" data-target="#showContentModal" wire:click="setShelfContents('A', 18)">18</button>
@@ -172,12 +178,13 @@
         </div>                                                                                          
     </form>
 
+    {{-- Add Item --}}
     <form autocomplete="off">
         <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add Teacher</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Add Item</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
@@ -205,9 +212,9 @@
                             </div>
                             <div class="col-lg-4">
                                 <select class="form-control" id="exampleFormControlSelect2" wire:model.defer="itemLetter">
-                                    <option>A</option>
-                                    <option>B</option>
-                                    <option>C</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
                                 </select>
                             </div>
                             <div class="col-lg-4">
