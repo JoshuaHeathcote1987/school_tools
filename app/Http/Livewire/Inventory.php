@@ -7,7 +7,11 @@ use Livewire\WithFileUploads;
 
 class Inventory extends Component
 {
+    use WithFileUploads;
+
     // Variables
+    public $photo;
+
     //Shelf
     public $shelfLetter, $shelfNum;
 
@@ -25,19 +29,42 @@ class Inventory extends Component
 
     public function addItem()
     {
-        $item = array(
-            'name' => $this->itemName,
-            'amount' => $this->itemAmount,
-            'letter' => $this->itemLetter,
-            'number' => $this->itemNumber,
-            'img' => $this->itemImg, 
-        );
+        $this->validate([
+            'photo' => 'image|max:10000', 
+        ]);
 
-        dd($item);
+        $this->photo->store('photos');
+        // try
+        // {
+        //     $item = array(
+        //         'name' => $this->itemName,
+        //         'amount' => $this->itemAmount,
+        //         'letter' => $this->itemLetter,
+        //         'number' => $this->itemNumber,
+        //         'img' => $this->photo, 
+        //     );
+
+          
+    
+        //     $this->validate([
+        //         'photo' => 'image|max:10000', 
+        //     ]);
+    
+        //     $this->photo->store('photos');
+
+         
+        // }
+        // catch (\Throwable $th) 
+        // {
+        //     $this->message = true;
+        // }
     }
 
     // Functions
+    public function saveImage()
+    {
 
+    }
     
     // Life Cycle
     public function hydrate()

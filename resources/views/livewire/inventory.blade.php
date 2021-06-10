@@ -3,18 +3,23 @@
     {{-- A good traveler has no fixed plans and is not intent upon arriving. --}}
     <div class="row mt-3 mr-1 mb-3">
         <div class="col-lg-12 mb-3">
-            <div class="form-inline">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            <div class="row">
+                <div class="form-inline col-lg-4">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </div>
+                <div class="col-lg-8">
+                    <button type="button" class="btn float-right mx-0" style="background-color:#63ab87; border: 1px solid black;" data-toggle="modal" data-target="#addItemModal">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="mx-auto" style="width: 25px;"><!-- Font Awesome Free 5.15.3 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
+                    </button>
+                </div>
             </div>
         </div>
         <div class="col-lg-12 mr-0 pr-0">
-            <button type="button" class="btn" style="width: 5%; height: auto; background-color:#ab6363; border: 1px solid black;  height: 100%;">A</button>
+            {{-- <button type="button" class="btn" style="width: 5%; height: auto; background-color:#ab6363; border: 1px solid black;  height: 100%;">A</button>
             <button type="button" class="btn" style="width: 5%; height: auto; background-color:#aba463; border: 1px solid black;  height: 100%;">B</button>
-            <button type="button" class="btn" style="width: 5%; height: auto; background-color:#ab63ab; border: 1px solid black;  height: 100%;">C</button>
-            <button type="button" class="btn float-right" style="width: 5%; height: auto; background-color:#63ab87; border: 1px solid black;  height: 100%;" data-toggle="modal" data-target="#addItemModal">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" class="mx-auto" style="width: 25px;"><!-- Font Awesome Free 5.15.3 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg>
-            </button>
+            <button type="button" class="btn" style="width: 5%; height: auto; background-color:#ab63ab; border: 1px solid black;  height: 100%;">C</button> --}}
+
         </div>
     </div>
     
@@ -179,8 +184,8 @@
     </form>
 
     {{-- Add Item --}}
-    <form autocomplete="off">
-        <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <form autocomplete="off" wire:submit.prevent="addItem">
+        <div class="modal fade" id="addItemModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
             <div class="modal-dialog modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -246,7 +251,8 @@
                             </div>
                             <div class="col-lg-8">
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="custom-file-input" wire:model.defer="itemImg">
+                                    {{$photo}}
+                                    <input type="file" class="custom-file-input" id="custom-file-input" wire:model="photo">
                                     <label class="custom-file-label" for="customFile">Choose file</label>
                                 </div>
                             </div>
@@ -254,13 +260,12 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" wire:click="addItem">Save changes</button>
+                        <button type="submit" class="btn btn-primary" data-dismiss="modal">Save changes</button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
-
 </div>
 
 <script>
