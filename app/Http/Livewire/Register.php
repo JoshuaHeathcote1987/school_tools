@@ -160,11 +160,7 @@ class Register extends Component
                 $query->where('teacher_id', $this->teacherId);
             })->get();
 
-            $this->attendances = DB::table('attendances')
-                ->where('attendances.teacher_id', '=', $this->teacherId)
-                ->where('attendances.month', '=', $this->month)
-                ->where('attendances.year', '=', $this->year)
-                ->get();
+
 
             $this->studentName = null;
             $this->studentSurname = null; 

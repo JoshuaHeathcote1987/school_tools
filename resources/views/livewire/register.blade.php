@@ -15,11 +15,19 @@
     </div>
     @endif
 
+    <div class="row mt-4 mb-3">
+        <div class="col-lg-12">
+            <h2 class="">{{$date}}</h2>
+        </div>
+    </div>
+
+    <hr style="background-color: black;">
+    
     <div class="row mt-4">
         <div class="col-lg-4">
             <div class="w-100">
                 <div class="form-group">
-                    <label for="exampleFormControlSelect1"><h3 style="font-family: 'Orelega One', cursive;">Month</h3></label>
+                    <label for="exampleFormControlSelect1"><h3>Month</h3></label>
                     <select wire:model.lazy="month" class="form-control">
                         <option selected value> -- select an option -- </option>
                         @foreach($months as $month)
@@ -28,7 +36,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="exampleFormControlSelect1"><h3 style="font-family: 'Orelega One', cursive;">Year</h3></label>
+                    <label for="exampleFormControlSelect1"><h3>Year</h3></label>
                     <select wire:model.lazy="year" class="form-control">
                         <option selected value> -- select an option -- </option>
                         @for($i=2021; $i<=2030; $i++)
@@ -41,7 +49,7 @@
         <div class="col-lg-4">
             <div style="width: 100%;">
                 <div class="form-group w-100">
-                    <label for="exampleFormControlSelect1"><h3 style="font-family: 'Orelega One', cursive;">Teacher</h3></label>
+                    <label for="exampleFormControlSelect1"><h3>Teacher</h3></label>
                     <select wire:model.lazy="teacher" class="form-control" id="exampleFormControlSelect1">
                         <option selected value> -- select an option -- </option>
                         @foreach($teachers as $teacher)
@@ -61,7 +69,7 @@
     <hr style="background-color: black;">
 
     @if(!$students == null)
-        <h4 class="float-right" style="font-family: 'Orelega One', cursive;">{{$date}}</h4>
+        
 
         <table class="table table-hover table-sm mb-4" style="border-left: 0px solid black; border-right: 0px solid black; border-bottom: 0px solid black; border-top: 0px solid black;">
             
@@ -322,15 +330,14 @@
             </div>
         </div>                                                                                          
     </form>
-
+    <script>
+        function mouseOver(button) {
+            button.style.opacity  = "1.0";
+        }
+        
+        function mouseOut(button) {
+            button.style.opacity  = "0.5";
+        }
+        </script>
 </div>
 
-<script>
-function mouseOver(button) {
-    button.style.opacity  = "1.0";
-}
-
-function mouseOut(button) {
-    button.style.opacity  = "0.5";
-}
-</script>
