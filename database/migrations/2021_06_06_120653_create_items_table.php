@@ -19,7 +19,7 @@ class CreateItemsTable extends Migration
             $table->integer('amount');
             $table->char('shelf_sec');
             $table->integer('shelf_num');
-            $table->string('img');
+            $table->string('img')->nullable();
             $table->timestamps();
         });
     }

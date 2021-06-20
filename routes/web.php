@@ -6,6 +6,7 @@ use App\Http\Controllers\AttendanceExportController;
 
 use App\Http\Livewire\Register;
 use App\Http\Livewire\Inventory;
+use App\Http\Livewire\Roster;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,7 @@ Route::view('/', 'welcome');
 
 Route::get('/attendance', Register::class);
 Route::get('/inventory', Inventory::class);
+Route::get('/roster', Roster::class);
 
 Route::get('/attendance/export', [AttendanceExportController::class, 'export'])->name('export');
 

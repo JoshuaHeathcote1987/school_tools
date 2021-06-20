@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Storage;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Livewire\WithPagination;
 
 use App\Models\Item;
 
@@ -14,15 +15,27 @@ use DB;
 class Inventory extends Component
 {
     use WithFileUploads;
+    use WithPagination;
+
+    protected $paginationTheme = 'bootstrap';
+
+    // Table Flipflop
+    public $flipFlopTable = false;
+
+    // Search
+    public $search = '';
 
     // Variables
     public $photo;
+    public $photoLocation = '';
 
     //Shelf
     public $shelfLetter, $shelfNum;
 
+    public $sectionAmount = 22;
+
     // Item
-    public $itemsA, $itemsB, $itemsC, $itemsSpecific, $items, $itemName, $itemAmount, $itemLetter, $itemNumber, $itemImg;
+    public $itemId, $itemsA, $itemsB, $itemsC, $itemsSpecific,  $itemName, $itemAmount, $itemLetter, $itemNumber, $itemImg;
     
     public $modalItem = array();
     public $modalItems = array();
@@ -49,7 +62,7 @@ class Inventory extends Component
             $item->save();
         }
 
-        return redirect()->to('/inventory');
+        $this->items = Item::all();
     }
 
     public function setShelfContents($letter, $num)
@@ -74,37 +87,96 @@ class Inventory extends Component
         }
     }
 
+    public function setSectionAmount()
+    {
+        switch($this->itemLetter)
+        {
+            case 'A': 
+                $this->sectionAmount = 22;
+                break;
+            case 'B':
+                $this->sectionAmount = 22;
+                break;
+            case 'C':
+                $this->sectionAmount = 19;
+                break;
+        }
+    }
+
     public function addItem()
     {
         $this->validate([
-            'photo' => 'image|max:10000', 
-            ]);
-            
-        $filename = $this->photo->store('photos');
-
+            'photo' => 'nullable|image|max:10000',
+        ]);
+    
         $item = Item::create([
             'name' => $this->itemName,
             'amount' => $this->itemAmount,
             'shelf_sec' => $this->itemLetter,
             'shelf_num' => $this->itemNumber,
-            'img' => $filename, 
+            'img' => $this->photo ?  $this->photo->store('photos') : 'no-photo-available.png',
         ]);
 
-        return redirect()->to('/inventory');
+        $this->itemName = null;
+        $this->itemAmount = null;
+        $this->photo = null;
+    
+        $this->items = Item::all();
     }
 
+    public function getEditItem($id)
+    {
+        $this->itemId = $id;
+        $item = Item::find($id);
+        $this->itemName = $item->name;
+        $this->itemAmount = $item->amount;
+        $this->itemLetter = $item->shelf_sec;
+        $this->itemNumber = $item->shelf_num;
+    }
+
+    public function setEditItem()
+    {
+        $item = Item::find($this->itemId);
+        $item->name = $this->itemName;
+        $item->amount = $this->itemAmount;
+        $item->shelf_sec = $this->itemLetter;
+        $item->shelf_num = $this->itemNumber;
+        $item->save();
+
+        $this->items = Item::all();
+    }
+
+    public function deleteItem($id)
+    {
+        $item = Item::find($id);
+        $item->delete();
+
+        $this->items = Item::all();
+    }
+
+    public function getImage($id)
+    {
+        $image = Item::find($id);
+        $photoLocation = $image->img;
+    }
 
     // Functions
-    public function saveImage()
+    public function flipFlopDisplay($obj)
     {
+        switch($obj)
+        {
+            case 'table':
+                if($this->flipFlopTable) 
+                {
+                    $this->flipFlopTable = false;
+                } else {
+                    $this->flipFlopTable = true;
+                }
+                break;
+        }
+    }
 
-    }
-    
-    // Life Cycle
-    public function hydrate()
-    {
-        
-    }
+
 
     public function mount()
     {
@@ -113,7 +185,6 @@ class Inventory extends Component
         $this->itemLetter = $this->shelfLetter; 
         $this->itemNumber = 1; 
 
-        $this->items = Item::all();
         $this->itemsSpecific = Item::all();
         $this->itemsA = Item::where('shelf_sec', 'A')->get();
         $this->itemsB = Item::where('shelf_sec', 'B')->get();
@@ -127,6 +198,10 @@ class Inventory extends Component
 
     public function render()
     {
-        return view('livewire.inventory');
+        sleep(0.5);
+
+        return view('livewire.inventory', [
+            'items' => Item::where('name', 'like', '%'.$this->search.'%')->paginate(10),
+        ]);
     }
 }
