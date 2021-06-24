@@ -17,6 +17,8 @@ class CreateTeachersTable extends Migration
             $table->id();
             $table->string('name', 50);
             $table->string('surname', 50);
+            $table->string('image', 100)->nullable();
+            $table->string('mascott', 50);
             $table->timestamps();
         });
     }

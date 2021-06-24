@@ -8,6 +8,7 @@
     <title>Welcome</title>
 </head>
 <body style="background-color:white;">
+    <a href="{{url('/attendance')}}">
     <div class="overlay"></div>
     <div class="container"><svg class="shape" viewBox="0 0 100 115" preserveAspectRatio="xMidYMin slice">
         <polygon points="" fill="none" stroke="hsl(320,100%,70%)" stroke-width="5">
@@ -778,5 +779,6 @@
         </polygon>
         </svg>
     </div>
+    </a>
 </body>
 </html>

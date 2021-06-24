@@ -11,12 +11,18 @@ use App\Exports\AttendanceExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use DB;
+use Illuminate\Support\Facades\Storage;
+use Livewire\WithFileUploads;
 
 class Register extends Component
 {
+    use WithFileUploads;
+
     public $message = false;
 
     public $name;
+
+    public $photo;
 
     public $students;
     public $teachers;
@@ -64,6 +70,10 @@ class Register extends Component
     public $showUserTools = "hidden";
     public $showAdminEditToolsButton = "enabled";
 
+    public $imageArray = array();
+
+    public $imageMascott;
+
     protected $rules = [
         'students.name' => 'required|string|max:50',
         'students.surname' => 'required|string|max:50',
@@ -98,52 +108,49 @@ class Register extends Component
 
     public function addTeacher()
     {
-        try
-        {
-            $name = $this->teacherName;
-            $surname = $this->teacherSurname;
-            $teacher = new Teacher();
-            $teacher->name = $name;
-            $teacher->surname = $surname;
-            $teacher->save();
-            $this->teachers = Teacher::orderBy('name', 'ASC')->get();  
-        }
-        catch (\Throwable $th) 
-        {
-            $this->message = true;
-        }
+        $this->validate([
+            'photo' => 'nullable|image|max:10000',
+        ]);
+
+        $teacher = new Teacher();
+        $teacher->name = $this->teacherName;
+        $teacher->surname = $this->teacherSurname;
+        $imageLocation = $this->photo ?  $this->photo->store('public/img/teachers') : 'no-photo-available.png';
+        $imageLocation = substr($imageLocation, 7);
+        $teacher->image = $imageLocation;
+        $teacher->mascott = $this->imageMascott;
+        $teacher->save();
+        $this->teachers = Teacher::orderBy('name', 'ASC')->get(); 
+        $this->photo = null;
     }
 
     public function addStudent()
     {
-        try{
-            $teacher = json_decode($this->teacher);
+        $teacher = json_decode($this->teacher);
 
-            $studentName = $this->studentName;
-            $studentSurname = $this->studentSurname;
-    
-            $student = Student::create([
-                'name' => $studentName,
-                'surname' => $studentSurname,
-            ]);
-    
-            $attendance = Attendance::create([
-                'teacher_id' => $teacher->id,
-                'student_id' => $student->id,
-                'day' => date('d'),
-                'month' => $this->month,
-                'year' => $this->year,
-            ]);
+        $student = new Student();
+        $student->name = $this->studentName;
+        $student->surname = $this->studentSurname;
+        $imageLocation = $this->photo ?  $this->photo->store('public/img/students') : 'no-photo-available.png';
+        $imageLocation = substr($imageLocation, 7);
+        $student->image = $imageLocation;
 
-            $this->getAttendanceRecords();
+        $student->save();
 
-            $this->studentName = null;
-            $this->studentSurname = null;
-        }
-        catch (\Throwable $th) 
-        {
-            $this->message = true;
-        }
+        $attendance = Attendance::create([
+            'teacher_id' => $teacher->id,
+            'student_id' => $student->id,
+            'day' => date('d'),
+            'month' => $this->month,
+            'year' => $this->year,
+        ]);
+
+        $this->getAttendanceRecords();
+
+        $this->photo = null;
+        $this->studentName = null;
+        $this->studentSurname = null;
+
     }
 
     public function editStudent()
@@ -281,46 +288,12 @@ class Register extends Component
         return Excel::download(new AttendanceExport($data), $this->name.'_'.$this->month.'_'.$this->year.'.xlsx');
     }
 
-
-
-// ============== Livewire Event Cycle ==============
-
-
-
-    public function mount()
+    public function setImageMascott($image)
     {
-        $this->teachers = Teacher::orderBy('name', 'ASC')->get();
-        $this->date = Carbon::now()->format('l jS \of F Y');
-        $this->days = date("t");
-        $this->visible = "visible";
-        $this->arrowPointing = $this->arrowLeft;
+        $this->imageMascott = $image;
     }
 
-    public function hydrate()
-    {
-        try
-        {
-            $this->attendances = DB::table('attendances')
-            ->where('attendances.teacher_id', '=', $this->teacherId)
-            ->where('attendances.month', '=', $this->month)
-            ->where('attendances.year', '=', $this->year)
-            ->get();
-        }
-        catch (\Throwable $th)
-        {
-            $this->message = true;
-        }
-    }
-
-    public function render()
-    {
-        return view('livewire.register');
-    }
-
-
-
-// ============== Functions ==============
-
+    // ============== Functions ==============
 
 
     public function convertMonth($month)
@@ -366,5 +339,43 @@ class Register extends Component
         }
 
         return $month;
+    }
+
+
+
+// ============== Livewire Event Cycle ==============
+
+
+
+    public function mount()
+    {
+        $this->teachers = Teacher::orderBy('name', 'ASC')->get();
+        $this->date = Carbon::now()->format('l jS \of F Y');
+        $this->days = date("t");
+        $this->visible = "visible";
+        $this->arrowPointing = $this->arrowLeft;
+
+        $this->imageArray = Storage::disk('public')->files('img/animals');
+    }
+
+    public function hydrate()
+    {
+        try
+        {
+            $this->attendances = DB::table('attendances')
+            ->where('attendances.teacher_id', '=', $this->teacherId)
+            ->where('attendances.month', '=', $this->month)
+            ->where('attendances.year', '=', $this->year)
+            ->get();
+        }
+        catch (\Throwable $th)
+        {
+            $this->message = true;
+        }
+    }
+
+    public function render()
+    {
+        return view('livewire.register');
     }
 }

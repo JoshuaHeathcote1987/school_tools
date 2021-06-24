@@ -114,7 +114,7 @@ class Inventory extends Component
             'amount' => $this->itemAmount,
             'shelf_sec' => $this->itemLetter,
             'shelf_num' => $this->itemNumber,
-            'img' => $this->photo ?  $this->photo->store('photos') : 'no-photo-available.png',
+            'img' => $this->photo ?  $this->photo->store('public/img') : 'no-photo-available.png',
         ]);
 
         $this->itemName = null;
@@ -136,12 +136,14 @@ class Inventory extends Component
 
     public function setEditItem()
     {
-        $item = Item::find($this->itemId);
-        $item->name = $this->itemName;
-        $item->amount = $this->itemAmount;
-        $item->shelf_sec = $this->itemLetter;
-        $item->shelf_num = $this->itemNumber;
-        $item->save();
+        $item = Item::where('id', $this->itemId)
+            ->update([
+                'name' => $this->itemName,
+                'amount' => $this->itemAmount,
+                'shelf_sec' => $this->itemLetter,
+                'shelf_num' => $this->itemNumber,
+                'img' => $this->photo ?  $this->photo->store('public/img') : 'no-photo-available.png',
+            ]);
 
         $this->items = Item::all();
     }
@@ -157,8 +159,10 @@ class Inventory extends Component
     public function getImage($id)
     {
         $image = Item::find($id);
-        $photoLocation = $image->img;
-    }
+        $this->photoLocation = $image->img;
+        $this->photoLocation = substr($this->photoLocation, 11);
+        $this->photoLocation = asset('/storage/img/'.$this->photoLocation);
+    }   
 
     // Functions
     public function flipFlopDisplay($obj)
@@ -175,8 +179,6 @@ class Inventory extends Component
                 break;
         }
     }
-
-
 
     public function mount()
     {

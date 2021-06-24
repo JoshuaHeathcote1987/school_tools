@@ -12,6 +12,8 @@ class Teacher extends Model
     protected $fillable = [
         'name',
         'surname',
+        'image',
+        'mascott',
     ];
 
     public function attendance()
