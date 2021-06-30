@@ -145,12 +145,16 @@ class Register extends Component
             'year' => $this->year,
         ]);
 
+        DB::table('teacher_students')->insert([
+            'teacher_id' => $teacher->id,
+            'student_id' => $student->id,
+        ]);
+
         $this->getAttendanceRecords();
 
         $this->photo = null;
         $this->studentName = null;
         $this->studentSurname = null;
-
     }
 
     public function editStudent()

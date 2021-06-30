@@ -2,7 +2,6 @@
 
     {{-- A good traveler has no fixed plans and is not intent upon arriving. --}}
 
-
     {{-- Code into it so that when a letter is selection on the modal screen of add item, that the selection will change the shelf number IMPORTANT --}}
     <div class="row mr-1 mt-3 px-0"> 
         <button wire:click="flipFlopDisplay('table')" onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" style="background-color:white;">
