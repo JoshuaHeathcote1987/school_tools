@@ -83,13 +83,15 @@ class Roster extends Component
         $student->save();
 
         $this->reset([
-            'anneId', 'anneName', 'anneSurname', 'anneTelephone', 'anneEmail', 'annePhoto',
-            'babaId', 'babaName', 'babaSurname', 'babaTelephone', 'babaEmail', 'babaPhoto',
+            'anneId', 'anneName', 'anneSurname', 'anneTelephone', 'anneEmail', 'annePhoto', 'annePhotoHolder',
+            'babaId', 'babaName', 'babaSurname', 'babaTelephone', 'babaEmail', 'babaPhoto', 'babaPhotoHolder',
         ]);
     }
 
     public function getStudent($id)
     {
+        $this->reset(['annePhotoHolder', 'babaPhotoHolder']);
+
         // Get student details
         $student = Student::where('id', $id)->first();
         $this->studentId = $student->id;
@@ -145,7 +147,7 @@ class Roster extends Component
 
             $this->annePhoto = self::NO_PARENTS_MSG;
             $this->babaPhoto = self::NO_PARENTS_MSG;
-        }
+        } 
     }
 
     public function getTeacher($id)

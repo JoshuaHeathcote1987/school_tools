@@ -1,9 +1,12 @@
 <div>
+    
     {{-- To attain knowledge, add things every day; To attain wisdom, subtract things every day. --}}
     <div class="row my-3">
         @foreach($teachers as $teacher)
             <div class="col-lg-3">
-                <img type="button" wire:click="getTeacher('{{$teacher->id}}')" class="img-thumbnail" src="{{asset('storage/'.$teacher->mascott)}}" alt="" srcset="">
+                <div style="height: 245px; overflow: hidden;">
+                    <img type="button" wire:click="getTeacher('{{$teacher->id}}')" class="img-thumbnail" src="{{asset('storage/'.$teacher->mascott)}}" alt="" srcset="">
+                </div>
             </div>
         @endforeach
     </div>
@@ -35,7 +38,7 @@
     {{-- Show Teacher --}}
     <form autocomplete="off">
         <div class="modal fade" id="showTeacherModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header" style="background-color: #bee5eb; border-bottom: 1px solid #404040;">
                         <h5 class="modal-title" id="exampleModalLabel">Teacher</h5>
@@ -44,7 +47,19 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        {{$teacherName}} {{$teacherSurname}}
+                        <div class="row">
+                            <div class="col-lg-10 mx-auto">
+                                <img class="img-thumbnail mx-auto" src="{{asset('storage/'.$teacherImage)}}" alt="" srcset="">
+                                <div class="form-group mx-auto">
+                                    <label for="exampleInputEmail1">Name</label>
+                                    <input type="text" class="form-control" id="" aria-describedby="emailHelp" value="{{$teacherName}}">
+                                </div>
+                                <div class="form-group mx-auto">
+                                    <label for="exampleInputEmail1">Name</label>
+                                    <input type="text" class="form-control" id="" aria-describedby="emailHelp" value="{{$teacherSurname}}">
+                                </div>
+                            </div>
+                        </div>     
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

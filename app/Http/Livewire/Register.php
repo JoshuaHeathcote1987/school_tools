@@ -74,6 +74,8 @@ class Register extends Component
 
     public $imageMascott;
 
+    public $optionButtons = "disabled";
+
     protected $rules = [
         'students.name' => 'required|string|max:50',
         'students.surname' => 'required|string|max:50',
@@ -255,6 +257,8 @@ class Register extends Component
                 ->where('attendances.month', '=', $this->month)
                 ->where('attendances.year', '=', $this->year)
                 ->get();
+
+            $this->optionButtons = "";
         }
         catch (\Throwable $th) 
         {
