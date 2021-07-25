@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="css/fontawesome.css">
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@200;400&display=swap" rel="stylesheet"> 
 
     <!-- Styles -->
     <style>
@@ -20,10 +20,10 @@
 
     <style>
         body {
-            background-image: url('{{asset('storage/img/Clouds.png')}}');
+            background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             background-repeat: no-repeat;
             background-attachment: fixed;
-            font-family: 'Comfortaa', cursive;
+            font-family: 'Karla', sans-serif;
         }
 
 
@@ -89,7 +89,7 @@
                     </li>
                     <li onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" class="">
                         <a href="{{url('roster')}}">
-                            <svg class="mx-auto" style="width: 15%;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!-- Font Awesome Free 5.15.3 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M507.31 84.69L464 41.37c-6-6-14.14-9.37-22.63-9.37H288V16c0-8.84-7.16-16-16-16h-32c-8.84 0-16 7.16-16 16v16H56c-13.25 0-24 10.75-24 24v80c0 13.25 10.75 24 24 24h385.37c8.49 0 16.62-3.37 22.63-9.37l43.31-43.31c6.25-6.26 6.25-16.38 0-22.63zM224 496c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16V384h-64v112zm232-272H288v-32h-64v32H70.63c-8.49 0-16.62 3.37-22.63 9.37L4.69 276.69c-6.25 6.25-6.25 16.38 0 22.63L48 342.63c6 6 14.14 9.37 22.63 9.37H456c13.25 0 24-10.75 24-24v-80c0-13.25-10.75-24-24-24z"/></svg>
+                            <svg class="mx-auto" style="width: 15%;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!-- Font Awesome Free 5.15.3 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) --><path d="M528 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h480c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-352 96c35.3 0 64 28.7 64 64s-28.7 64-64 64-64-28.7-64-64 28.7-64 64-64zm112 236.8c0 10.6-10 19.2-22.4 19.2H86.4C74 384 64 375.4 64 364.8v-19.2c0-31.8 30.1-57.6 67.2-57.6h5c12.3 5.1 25.7 8 39.8 8s27.6-2.9 39.8-8h5c37.1 0 67.2 25.8 67.2 57.6v19.2zM512 312c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-64c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16zm0-64c0 4.4-3.6 8-8 8H360c-4.4 0-8-3.6-8-8v-16c0-4.4 3.6-8 8-8h144c4.4 0 8 3.6 8 8v16z"/></svg>
                         </a>
                     </li>
                     <li onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" class="">
@@ -105,6 +105,8 @@
             </div>
         </div>
     </nav>
+    
+    
 
     <div class="container mt-4 mb-4 bg-white shadow-sm rounded-lg" style="border: 1px solid grey;">
         {{$slot}}

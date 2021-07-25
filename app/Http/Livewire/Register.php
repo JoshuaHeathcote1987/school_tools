@@ -134,7 +134,7 @@ class Register extends Component
         $student->name = $this->studentName;
         $student->surname = $this->studentSurname;
         $imageLocation = $this->photo ?  $this->photo->store('public/img/students') : 'no-photo-available.png';
-        $imageLocation = substr($imageLocation, 7);
+        // $imageLocation = substr($imageLocation, 7);
         $student->image = $imageLocation;
 
         $student->save();

@@ -21,72 +21,210 @@ class Roster extends Component
 
     public $teacherId, $teacherName, $teacherSurname, $teacherImage;
 
-    public $studentId, $studentName, $studentSurname, $studentsTeacher, $studentPhoto;
+    public $studentId, $studentName, $studentSurname, $studentsTeacher, $studentPhoto, $studentPhotoHolder;
 
-    public $babaId, $babaName, $babaSurname, $babaTelephone, $babaEmail, $babaPhoto, $babaPhotoHolder;
+    public $babaId, $babaName, $babaSurname, $babaTelephone, $babaEmail, $babaPhoto, $babaPhotoHolder, $father;
 
-    public $anneId, $anneName, $anneSurname, $anneTelephone, $anneEmail, $annePhoto, $annePhotoHolder;
+    public $anneId, $anneName, $anneSurname, $anneTelephone, $anneEmail, $annePhoto, $annePhotoHolder, $mother;
 
     public $teacherStudentFlipFlop;
 
     const NO_PARENTS_MSG = 'Not set!';
 
-    public function setStudentAnneBabaModal()
+    const NO_PARENT_IMG = 'img/placeholder.png';
+
+    public function saveStudent()
     {
-        // Validation Check
-        $this->validate([
-            // 'studentPhoto' => 'nullable|image|max:10000',
-            'annePhoto' => 'nullable|image|max:10000',
-            'babaPhoto' => 'nullable|image|max:10000',
+        $name = $this->studentName;
+        $surname = $this->studentSurname;
+        $id = $this->studentId;
+
+        // Get the student, check if there is or isn't a photo, and if there is, 
+        // replace the orignal. Then continue to update the inputs.
+
+        $student = DB::table('students')
+        ->where('students.id', $this->studentId)
+        ->get();
+
+        if(!empty($this->studentPhoto))
+        {
+
+            Storage::delete(public_path($this->studentPhotoHolder));
+
+            $this->validate([
+                'studentPhoto' => 'nullable|image|max:10000',
+            ]);
+    
+            $photo = $this->studentPhoto ?  $this->studentPhoto->store('public/img/students') : 'public/img/parents/no-photo-available.png';  
+
+
+            $affected = DB::table('students')
+            ->where('id', $id)
+            ->update([
+                'image' => $photo,
+            ]);
+        }
+
+        $user = DB::table('students')
+            ->where('id', '=', $id)
+            ->update([
+                'name' => $name,
+                'surname' => $surname,
         ]);
 
-        // Image Upload
-        $this->annePhoto = $this->annePhoto ?  $this->annePhoto->store('public/img/parents') : 'public/img/parents/no-photo-available.png';
-        $this->babaPhoto = $this->babaPhoto ?  $this->babaPhoto->store('public/img/parents') : 'public/img/parents/no-photo-available.png';
-        
-        // Insert Mother
-        $mother = Genitor::updateOrCreate([
-            'mother' => true,
-            'name' => $this->anneName,
-            'surname' => $this->anneSurname,
-            'image' => $this->annePhoto,
-            'phone' => $this->anneTelephone,
-            'email' => $this->anneEmail,
-        ],['name', 'surname']);
-
-        // Insert Father
-        $father = Genitor::updateOrCreate([
-            'mother' => false,
-            'name' => $this->babaName,
-            'surname' => $this->babaSurname,
-            'image' => $this->babaPhoto,
-            'phone' => $this->babaTelephone,
-            'email' => $this->babaEmail,
-        ],['name', 'surname']);
-
-        // Insert Student Parent connection
-        DB::table('student_parents')->upsert([
-            'student_id' => $this->studentId,
-            'parent_id' => $mother->id,
-        ],[$mother->id]);
-
-        DB::table('student_parents')->upsert([
-            'student_id' => $this->studentId,
-            'parent_id' => $father->id,
-        ],[$father->id]);
-
-        // Update Student (doesn't matter if the infooration in Student hasn't changed)
-        $student = Student::find($this->studentId);
-        $student->name = $this->studentName;
-        $student->surname = $this->studentSurname;
-        $student->image = $this->studentPhoto;
-        $student->save();
-
-        $this->reset([
-            'anneId', 'anneName', 'anneSurname', 'anneTelephone', 'anneEmail', 'annePhoto', 'annePhotoHolder',
-            'babaId', 'babaName', 'babaSurname', 'babaTelephone', 'babaEmail', 'babaPhoto', 'babaPhotoHolder',
-        ]);
+        $this->getStudents();
     }
+
+    public function saveMother()
+    {
+        $mother = true;
+        $studentId = $this->studentId;
+        $name = $this->anneName;
+        $surname = $this->anneSurname;
+        $telephone = $this->anneTelephone;
+        $email = $this->anneEmail;
+
+        $anne = DB::table('parents')
+            ->join('student_parents', 'parents.id', '=', 'student_parents.parent_id')
+            ->where('student_parents.student_id', $this->studentId)
+            ->where('parents.mother', 1)
+            ->select('parents.*')
+            ->get();
+
+        if(sizeof($anne) != 0)
+        {
+            // Checks if there is an image, if not no new image is not uploaded, but 
+            // if there is an image, then the orignal file is delete and replaced 
+            // with the new one.
+            if(!empty($this->annePhoto))
+            {
+                Storage::delete($anne[0]->image);
+
+                $this->validate([
+                    'annePhoto' => 'nullable|image|max:10000',
+                ]);
+        
+                $photo = $this->annePhoto ?  $this->annePhoto->store('public/img/parents') : 'public/img/parents/no-photo-available.png';  
+
+                $affected = DB::table('parents')
+                ->where('id', $anne[0]->id)
+                ->update([
+                    'image' => $photo,
+                ]);
+            }
+
+            $affected = DB::table('parents')
+            ->where('id', $anne[0]->id)
+            ->update([
+                'name' => $name,
+                'surname' => $surname,
+                'phone' => $telephone,
+                'email' => $email,
+            ]);
+        }
+
+        if(sizeof($anne) === 0)
+        {
+            $this->validate([
+                'annePhoto' => 'nullable|image|max:10000',
+            ]);
+    
+            $photo = $this->annePhoto ?  $this->annePhoto->store('public/img/parents') : 'public/img/parents/no-photo-available.png';      
+    
+            $anne = Genitor::updateOrCreate([
+                'mother' => $mother,
+                'name' => $name,
+                'surname' => $surname,
+                'image' => $photo,
+                'phone' => $telephone,
+                'email' => $email,
+            ],['name', 'surname']);
+    
+            DB::table('student_parents')->upsert([
+                'student_id' => $studentId,
+                'parent_id' => $anne->id,
+            ],[$anne->id]);
+
+            return;
+        }
+    }
+
+    public function saveFather()
+    {
+        $mother = false;
+        $studentId = $this->studentId;
+        $name = $this->babaName;
+        $surname = $this->babaSurname;
+        $telephone = $this->babaTelephone;
+        $email = $this->babaEmail;
+        $photo = $this->babaPhotoHolder;
+
+        // Get the father that is linked to the student, if he exists.
+        $father = DB::table('parents')
+        ->join('student_parents', 'parents.id', '=', 'student_parents.parent_id')
+        ->where('student_parents.student_id', $this->studentId)
+        ->where('parents.mother', 0)
+        ->select('parents.*')
+        ->get();
+
+        if(sizeof($father) != 0)
+        {
+            // Checks if there is an image, if not no new image is not uploaded, but 
+            // if there is an image, then the orignal file is delete and replaced 
+            // with the new one.
+            if(!empty($this->babaPhoto))
+            {
+                Storage::delete($father[0]->image);
+
+                $this->validate([
+                    'babaPhoto' => 'nullable|image|max:10000',
+                ]);
+        
+                $photo = $this->babaPhoto ?  $this->babaPhoto->store('public/img/parents') : 'public/img/parents/no-photo-available.png';  
+
+                $affected = DB::table('parents')
+                ->where('id', $father[0]->id)
+                ->update([
+                    'image' => $photo,
+                ]);
+            }
+
+            $affected = DB::table('parents')
+                ->where('id', $father[0]->id)
+                ->update([
+                    'name' => $name,
+                    'surname' => $surname,
+                    'phone' => $telephone,
+                    'email' => $email,
+                ]);
+        }
+
+        if(sizeof($father) === 0)
+        {
+            $this->validate([
+                'babaPhoto' => 'nullable|image|max:10000',
+            ]);
+    
+            $photo = $this->babaPhoto ?  $this->babaPhoto->store('public/img/parents') : 'public/img/parents/no-photo-available.png';      
+    
+            $father = Genitor::updateOrCreate([
+                'mother' => $mother,
+                'name' => $name,
+                'surname' => $surname,
+                'image' => $photo,
+                'phone' => $telephone,
+                'email' => $email,
+            ],['name', 'surname']);
+    
+            $studentParents = DB::table('student_parents')->upsert([
+                'student_id' => $studentId,
+                'parent_id' => $father->id,
+            ],[$father->id]);
+
+            return;
+        }
+    }
+    
 
     public function getStudent($id)
     {
@@ -97,56 +235,57 @@ class Roster extends Component
         $this->studentId = $student->id;
         $this->studentName = $student->name;
         $this->studentSurname = $student->surname;
-        $this->studentPhoto = $student->image;
-
-        // Get the students who are connected to a specific teacher
-        $this->studentsTeacher = DB::table('students')
-        ->join('teacher_students', 'students.id', '=', 'teacher_students.student_id')
-        ->where('teacher_students.teacher_id', $this->teacherId)
-        ->select('students.*')
-        ->get();
+        $this->studentPhotoHolder = substr($student->image, 7);
 
         // Get parent details
-        $this->parents = DB::table('parents')
+        $this->mother = DB::table('parents')
         ->join('student_parents', 'parents.id', '=', 'student_parents.parent_id')
         ->where('student_parents.student_id', $this->studentId)
+        ->where('parents.mother', 1)
         ->select('parents.*')
         ->get();
 
-        // Organise parent details
-        if(sizeof($this->parents) != 0)
+        $this->father = DB::table('parents')
+        ->join('student_parents', 'parents.id', '=', 'student_parents.parent_id')
+        ->where('student_parents.student_id', $this->studentId)
+        ->where('parents.mother', 0)
+        ->select('parents.*')
+        ->get();
+
+        if(sizeof($this->mother) != 0)
         {
-            $this->anneName = $this->parents[0]->name;
-            $this->anneSurname = $this->parents[0]->surname;
-            $this->annePhotoHolder = $this->parents[0]->image;
-            $this->anneTelephone = $this->parents[0]->phone;
-            $this->anneEmail = $this->parents[0]->email;
-
-            $this->babaName = $this->parents[1]->name;
-            $this->babaSurname = $this->parents[1]->surname;
-            $this->babaPhotoHolder = $this->parents[1]->image;
-            $this->babaTelephone = $this->parents[1]->phone;
-            $this->babaEmail = $this->parents[1]->email;
-
+            $this->anneName = $this->mother[0]->name;
+            $this->anneSurname = $this->mother[0]->surname;
+            $this->annePhotoHolder = $this->mother[0]->image;
+            $this->anneTelephone = $this->mother[0]->phone;
+            $this->anneEmail = $this->mother[0]->email;
             $this->annePhotoHolder = substr($this->annePhotoHolder, 7);
-            $this->babaPhotoHolder = substr($this->babaPhotoHolder, 7);
         }
         else
         {
             $this->anneName = self::NO_PARENTS_MSG;
             $this->anneSurname = self::NO_PARENTS_MSG;
-            $this->annePhoto = self::NO_PARENTS_MSG;
             $this->anneTelephone = self::NO_PARENTS_MSG;
             $this->anneEmail = self::NO_PARENTS_MSG;
+            $this->annePhotoHolder = self::NO_PARENT_IMG;
+        } 
 
+        if(sizeof($this->father) != 0)
+        {
+            $this->babaName = $this->father[0]->name;
+            $this->babaSurname = $this->father[0]->surname;
+            $this->babaPhotoHolder = $this->father[0]->image;
+            $this->babaTelephone = $this->father[0]->phone;
+            $this->babaEmail = $this->father[0]->email;
+            $this->babaPhotoHolder = substr($this->babaPhotoHolder, 7);
+        }
+        else
+        {
             $this->babaName = self::NO_PARENTS_MSG;
             $this->babaSurname = self::NO_PARENTS_MSG;
-            $this->babaPhoto = self::NO_PARENTS_MSG;
             $this->babaTelephone = self::NO_PARENTS_MSG;
             $this->babaEmail = self::NO_PARENTS_MSG;
-
-            $this->annePhoto = self::NO_PARENTS_MSG;
-            $this->babaPhoto = self::NO_PARENTS_MSG;
+            $this->babaPhotoHolder = self::NO_PARENT_IMG;
         } 
     }
 
@@ -177,13 +316,74 @@ class Roster extends Component
         ]);
     }
 
+    public function updateTeacher()
+    {
+        
+    }
+
+    public function destroyStudent($id)
+    {
+        $studentPhoto;
+        $motherPhoto;
+        $fatherPhoto;
+        $mother;
+        $father;
+        $student;
+
+        // Get the student so you are able to delete the picture
+        $student = DB::table('students')->where('id', $id)->first();  
+        Storage::delete($student->image);
+        DB::table('students')->where('id', '=', $id)->delete();
+        
+        // Delete Mothers Picture
+        $mother = DB::table('parents')
+            ->join('student_parents', 'parents.id', '=', 'student_parents.parent_id')
+            ->where('student_parents.student_id', $id)
+            ->where('parents.mother', 1)
+            ->select('parents.*')
+            ->get();
+
+        // Check if mother exists
+        if(sizeof($mother) != 0) {
+            Storage::delete($mother[0]->image);
+            DB::table('parents')->where('id', '=', $mother[0]->id)->delete();
+        }
+        
+        // Delete Fathers Picture
+        $father = DB::table('parents')
+            ->join('student_parents', 'parents.id', '=', 'student_parents.parent_id')
+            ->where('student_parents.student_id', $id)
+            ->where('parents.mother', 0)
+            ->select('parents.*')
+            ->get();
+
+        // Check if father exists
+        if(sizeof($father) != 0) {
+            Storage::delete($father[0]->image);
+            DB::table('parents')->where('id', '=', $father[0]->id)->delete();
+        }
+        
+        // Delete the student Teacher connection
+        DB::table('teacher_students')->where('student_id', '=', $id)->delete();
+
+        // Delete the parent student connection
+        DB::table('student_parents')->where('student_id', '=', $id)->delete();
+
+        $this->getStudents();
+    }
+
     public function getStudents()
     {
         $this->studentsTeacher = DB::table('students')
-        ->join('teacher_students', 'students.id', '=', 'teacher_students.student_id')
-        ->where('teacher_students.teacher_id', $this->teacherId)
-        ->select('students.*')
-        ->get();
+            ->join('teacher_students', 'students.id', '=', 'teacher_students.student_id')
+            ->where('teacher_students.teacher_id', $this->teacherId)
+            ->select('students.*')
+            ->get();
+    }
+
+    public function addStudent()
+    {
+        
     }
 
     public function hydrate()

@@ -1,4 +1,5 @@
 <div>
+    
     {{-- The whole world belongs to you. --}}
     @if($message)
     <div class="row mt-3">
@@ -143,6 +144,17 @@
                     <div class="modal-body">
                         <div class="form-group row">
                             <div class="col-lg-3">
+                                <label for="" class="col-sm-2 col-form-label text-right">Photo</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="custom-file-input" wire:model="photo">
+                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-3">
                                 <label for="" class="col-sm-2 col-form-label text-right">Forename</label>
                             </div>
                             <div class="col-lg-9">
@@ -157,17 +169,7 @@
                                 <input type="text" class="form-control" wire:model.defer="teacherSurname">
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-lg-3">
-                                <label for="" class="col-sm-2 col-form-label text-right">Photo</label>
-                            </div>
-                            <div class="col-lg-9">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="custom-file-input" wire:model="photo">
-                                    <label class="custom-file-label" for="customFile">Choose file</label>
-                                </div>
-                            </div>
-                        </div>
+                        
 
                         <h4 class="text-center">Choose your class Mascott...</h4>
                         <div class="alert alert-dark mt-3 mx-2 overflow-auto" style="height: 300px;" role="">
@@ -221,6 +223,17 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-lg-3">
+                                <label for="" class="col-sm-2 col-form-label text-right">Photo</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="custom-file-input" wire:model="photo">
+                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-3">
                                 <label for="" class="col-sm-2 col-form-label text-right">Forename</label>
                             </div>
                             <div class="col-lg-9">
@@ -235,17 +248,7 @@
                                 <input type="text" class="form-control" id="" placeholder="" wire:model.defer="studentSurname">
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-lg-3">
-                                <label for="" class="col-sm-2 col-form-label text-right">Photo</label>
-                            </div>
-                            <div class="col-lg-9">
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="custom-file-input" wire:model="photo">
-                                    <label class="custom-file-label" for="customFile">Choose file</label>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
