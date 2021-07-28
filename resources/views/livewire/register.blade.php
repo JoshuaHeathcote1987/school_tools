@@ -268,7 +268,7 @@
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Edit Student</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
+                                <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body">
@@ -277,7 +277,7 @@
                                     <label for="" class="col-sm-2 col-form-label text-right">Students</label>
                                 </div>
                                 <div class="col-lg-9">
-                                    <select wire:model.defer="studentSelected" multiple class="form-control" size="8">
+                                    <select wire:model.defer="studentSelected" class="form-control">
                                         @foreach ($students as $student)
                                             <option value="{{$student}}">{{$student->name}} {{$student->surname}}</option>
                                         @endforeach

@@ -19,7 +19,7 @@ class Roster extends Component
 
     public $teachers, $students, $teacher, $student;
 
-    public $teacherId, $teacherName, $teacherSurname, $teacherImage;
+    public $teacherId, $teacherName, $teacherSurname, $teacherImage, $teacherSelection;
 
     public $studentId, $studentName, $studentSurname, $studentsTeacher, $studentPhoto, $studentPhotoHolder;
 
@@ -28,6 +28,8 @@ class Roster extends Component
     public $anneId, $anneName, $anneSurname, $anneTelephone, $anneEmail, $annePhoto, $annePhotoHolder, $mother;
 
     public $teacherStudentFlipFlop;
+
+    public $photo;
 
     const NO_PARENTS_MSG = 'Not set!';
 
@@ -316,11 +318,6 @@ class Roster extends Component
         ]);
     }
 
-    public function updateTeacher()
-    {
-        
-    }
-
     public function destroyStudent($id)
     {
         $studentPhoto;
@@ -383,7 +380,57 @@ class Roster extends Component
 
     public function addStudent()
     {
+        $teacher = json_decode($this->teacherSelection);
+
+        $this->validate([
+            'studentPhoto' => 'nullable|image|max:10000',
+        ]);
+
+        $student = new Student();
+        $student->name = $this->studentName;
+        $student->surname = $this->studentSurname;
+        $imageLocation = $this->studentPhoto ?  $this->studentPhoto->store('public/img/students') : 'no-photo-available.png';
+        // $imageLocation = substr($imageLocation, 7); // There is a problem where the teacher and student have differnet algo for saving images, it needs to be fixed.
+        $student->image = $imageLocation;
+
+        $student->save();
+
+        $attendance = Attendance::create([
+            'teacher_id' => $teacher->id,
+            'student_id' => $student->id,
+            'day' => date('d'),
+            'month' => date('F'),
+            'year' => date('Y'),
+        ]);
+
+        DB::table('teacher_students')->insert([
+            'teacher_id' => $teacher->id,
+            'student_id' => $student->id,
+        ]);
+
+        $this->getStudents();
+
+        $this->photo = null;
+    }
+
+    public function updateTeacher()
+    {
         
+    }
+
+    public function swapStudent()
+    {
+        $affected = DB::table('teacher_students')
+            ->where('student_id', $this->studentId)
+            ->where('teacher_id', $this->teacherId)
+            ->update(['teacher_id' => $this->teacherSelection]);
+
+        $this->getStudents();
+    }
+
+    public function setStudent($id)
+    {
+        $this->studentId = $id;
     }
 
     public function hydrate()
