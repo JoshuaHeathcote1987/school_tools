@@ -1,4 +1,4 @@
-<div>
+<div class="container mt-4 mb-4 bg-white shadow-sm rounded-lg" style="border: 1px solid grey;"> 
 
     {{-- A good traveler has no fixed plans and is not intent upon arriving. --}}
 

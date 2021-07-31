@@ -31,7 +31,7 @@ class Roster extends Component
 
     public $photo;
 
-    const NO_PARENTS_MSG = 'Not set!';
+    const NO_PARENTS_MSG = '-- not set --';
 
     const NO_PARENT_IMG = 'img/placeholder.png';
 

@@ -1,4 +1,6 @@
-<div>
+<div class="container mt-4 mb-4 bg-white shadow-sm rounded-lg" style="border: 1px solid grey;">
+
+    
 
     {{-- To attain knowledge, add things every day; To attain wisdom, subtract things every day. --}}
     <div class="row mt-3 mb-0 pb-0">

@@ -1,4 +1,4 @@
-<div>
+<div class="container mt-4 mb-4 bg-white shadow-sm rounded-lg" style="border: 1px solid grey;">
     
     {{-- The whole world belongs to you. --}}
     @if($message)
