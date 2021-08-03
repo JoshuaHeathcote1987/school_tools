@@ -226,7 +226,19 @@ class Roster extends Component
             return;
         }
     }
-    
+
+    public function export()
+    {
+        $teacher = $this->teacher;
+        $students = $this->students;
+
+        $data = array([
+            'teacher' => $teacher,
+            'students' => $students,
+        ]);
+
+        return Excel::download(new StudentsExport($data), $this->teacherName.'_Students_'.$this->month.'_'.$this->year.'.xlsx');
+    }
 
     public function getStudent($id)
     {

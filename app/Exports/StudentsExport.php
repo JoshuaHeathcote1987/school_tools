@@ -2,17 +2,14 @@
 
 namespace App\Exports;
 
-use Illuminate\Contracts\View\View;
-
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 use App\Models\Student;
-use App\Models\Attendance;
+use App\Models\Teacher;
 
-class AttendanceExport implements FromView, ShouldAutoSize
+class StudentsExport implements FromView, ShouldAutoSize
 {
-
     public $data;
 
     public function __construct($data)
@@ -20,12 +17,9 @@ class AttendanceExport implements FromView, ShouldAutoSize
         $this->data = $data;
     }
 
-    /**
-    * @return \Illuminate\Support\Collection
-    */
     public function view(): View
     {
-        return view('export.attendance', [
+        return view('export.teacher-students', [
             'data' => $this->data    
         ]);
     }

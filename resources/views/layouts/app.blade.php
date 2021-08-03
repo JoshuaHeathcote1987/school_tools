@@ -116,22 +116,28 @@
         <div class="w3-dropdown-hover">
             <button class="w3-button">Teacher</button>
             <div class="w3-dropdown-content w3-bar-block w3-border">
-                <a href="#" class="w3-bar-item w3-button">Link 1</a>
-                <a href="#" class="w3-bar-item w3-button">Link 2</a>
-                <a href="#" class="w3-bar-item w3-button">Link 3</a>
+                <a href="#" class="w3-bar-item w3-button">Add</a>
+                <a href="#" class="w3-bar-item w3-button">Edit</a>
+                <a href="#" class="w3-bar-item w3-button">Delete</a>
             </div>
         </div> 
         <div class="w3-dropdown-hover">
             <button class="w3-button">Student</button>
             <div class="w3-dropdown-content w3-bar-block w3-border">
-                <a href="#" class="w3-bar-item w3-button">Link 1</a>
-                <a href="#" class="w3-bar-item w3-button">Link 2</a>
-                <a href="#" class="w3-bar-item w3-button">Link 3</a>
+                <a href="#" class="w3-bar-item w3-button">Add</a>
+                <a href="#" class="w3-bar-item w3-button">Edit</a>
+                <a href="#" class="w3-bar-item w3-button">Delete</a>
             </div>
+        </div> 
+        <div class="w3-dropdown-hover">
+            <button class="w3-button">Item</button>
+        </div> 
+        <div class="w3-dropdown-hover">
+            <button class="w3-button">Book</button>
         </div> 
     </div>
     
-    <div>
+    <div class="ml-4">
         {{$slot}}
     </div>
 
@@ -185,6 +191,16 @@
 
         function w3_close() {
             document.getElementById("mySidebar").style.display = "none";
+        }
+
+        var prevScrollpos = window.pageYOffset;
+
+        window.onscroll = function() {
+            var currentScrollPos = window.pageYOffset;
+            if (prevScrollpos < currentScrollPos) {
+                document.getElementById("mySidebar").style.display = "none";
+            }
+            prevScrollpos = currentScrollPos;
         }
     </script>
 
