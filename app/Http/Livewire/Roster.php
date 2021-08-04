@@ -231,10 +231,35 @@ class Roster extends Component
     {
         $teacher = $this->teacher;
         $students = $this->students;
+        $mothers = []; 
+        $fathers = [];
 
-        $data = array([
+        foreach($students as $student)
+        {
+
+            $father = DB::table('parents')
+            ->join('student_parents', 'parents.id', '=', 'student_parents.parent_id')
+            ->where('student_parents.student_id', $student->id)
+            ->where('parents.mother', 0)
+            ->select('parents.name', 'parents.surname', 'parents.email', 'parents.telephone')
+            ->get();
+
+            $mother = DB::table('parents')
+            ->join('student_parents', 'parents.id', '=', 'student_parents.parent_id')
+            ->where('student_parents.student_id', $student->id)
+            ->where('parents.mother', 1)
+            ->select('parents.name', 'parents.surname', 'parents.email', 'parents.telephone')
+            ->get();
+        
+            array_push($fathers, $father);
+            array_push($mothers, $mother);
+        }
+
+        $data = ([
             'teacher' => $teacher,
             'students' => $students,
+            'mothers' => $mothers,
+            'fathers' => $fathers,
         ]);
 
         return Excel::download(new StudentsExport($data), $this->teacherName.'_Students_'.$this->month.'_'.$this->year.'.xlsx');

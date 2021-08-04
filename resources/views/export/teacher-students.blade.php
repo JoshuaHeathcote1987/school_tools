@@ -1,0 +1,12 @@
+<table>
+    <thead>
+        <th>student_name</th>
+        <th>student_surname</th>
+        <th>mothers_name</th>
+        <th>mothers_telephone</th>
+        <th>mothers_email</th>
+        <th>fathers_name</th>
+        <th>fathers_telephone</th>
+        <th>fathers_email</th>
+    </thead>
+</table>
