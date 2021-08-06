@@ -9,6 +9,9 @@ use App\Models\Student;
 use App\Models\Attendance;
 use App\Models\Genitor;
 
+use App\Exports\StudentsExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 use DB;
 use Illuminate\Support\Facades\Storage;
 use Livewire\WithFileUploads;
@@ -234,21 +237,23 @@ class Roster extends Component
         $mothers = []; 
         $fathers = [];
 
+        $month = date('F');
+        $year = date('Y');
+
         foreach($students as $student)
         {
-
             $father = DB::table('parents')
             ->join('student_parents', 'parents.id', '=', 'student_parents.parent_id')
             ->where('student_parents.student_id', $student->id)
             ->where('parents.mother', 0)
-            ->select('parents.name', 'parents.surname', 'parents.email', 'parents.telephone')
+            ->select('parents.name', 'parents.surname', 'parents.email', 'parents.phone')
             ->get();
 
             $mother = DB::table('parents')
             ->join('student_parents', 'parents.id', '=', 'student_parents.parent_id')
             ->where('student_parents.student_id', $student->id)
             ->where('parents.mother', 1)
-            ->select('parents.name', 'parents.surname', 'parents.email', 'parents.telephone')
+            ->select('parents.name', 'parents.surname', 'parents.email', 'parents.phone')
             ->get();
         
             array_push($fathers, $father);
@@ -262,7 +267,7 @@ class Roster extends Component
             'fathers' => $fathers,
         ]);
 
-        return Excel::download(new StudentsExport($data), $this->teacherName.'_Students_'.$this->month.'_'.$this->year.'.xlsx');
+        return Excel::download(new StudentsExport($data), $this->teacherName.'_Students_'.$month.'_'.$year.'.xlsx');
     }
 
     public function getStudent($id)

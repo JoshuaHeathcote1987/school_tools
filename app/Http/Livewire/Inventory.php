@@ -8,6 +8,9 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
+use App\Exports\ItemExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 use App\Models\Item;
 
 use DB;
@@ -163,6 +166,15 @@ class Inventory extends Component
         $this->photoLocation = substr($this->photoLocation, 11);
         $this->photoLocation = asset('/storage/img/'.$this->photoLocation);
     }   
+
+    public function export()
+    {
+        $data = Item::orderBy('shelf_sec')->orderBy('shelf_num')->get();
+        $month = date('F');
+        $year = date('Y');
+
+        return Excel::download(new ItemExport($data), 'Items_'.$month.'_'.$year.'.xlsx');
+    }
 
     // Functions
     public function flipFlopDisplay($obj)

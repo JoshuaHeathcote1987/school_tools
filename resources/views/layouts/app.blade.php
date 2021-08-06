@@ -83,7 +83,8 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <button class="w3-button w3-xlarge" onclick="w3_open()">☰</button>
+            {{-- This opens the navbar - Not yet finished --}}
+            {{-- <button class="w3-button w3-xlarge" onclick="w3_open()">☰</button> --}}
             <div class="container">
                 <ul class="navbar-nav">
                     <li onmouseover="mouseOver(this)" onmouseout="mouseOut(this)" class="">
@@ -110,32 +111,42 @@
         </div>
     </nav>
 
-    <!-- Sidebar -->
-    <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none;width:10%;" id="mySidebar">
+    <!-- Sidebar Finish when you got time -->
+    {{-- <div class="w3-sidebar w3-bar-block w3-border-right" style="display:none;width:10%;" id="mySidebar">
         <button onclick="w3_close()" class="w3-bar-item w3-large">Close &times;</button>
         <div class="w3-dropdown-hover">
-            <button class="w3-button">Teacher</button>
+            <button class="w3-button w3-border-bottom">Teacher</button>
             <div class="w3-dropdown-content w3-bar-block w3-border">
-                <a href="#" class="w3-bar-item w3-button">Add</a>
-                <a href="#" class="w3-bar-item w3-button">Edit</a>
-                <a href="#" class="w3-bar-item w3-button">Delete</a>
+                <a href="#" class="w3-bar-item w3-button w3-border-bottom">Add</a>
+                <a href="#" class="w3-bar-item w3-button w3-border-bottom">Edit</a>
+                <a href="#" class="w3-bar-item w3-button w3-border-bottom">Delete</a>
             </div>
         </div> 
         <div class="w3-dropdown-hover">
-            <button class="w3-button">Student</button>
+            <button class="w3-button w3-border-bottom">Student</button>
             <div class="w3-dropdown-content w3-bar-block w3-border">
-                <a href="#" class="w3-bar-item w3-button">Add</a>
-                <a href="#" class="w3-bar-item w3-button">Edit</a>
-                <a href="#" class="w3-bar-item w3-button">Delete</a>
+                <a href="#" class="w3-bar-item w3-button w3-border-bottom">Add</a>
+                <a href="#" class="w3-bar-item w3-button w3-border-bottom">Edit</a>
+                <a href="#" class="w3-bar-item w3-button w3-border-bottom">Delete</a>
             </div>
         </div> 
         <div class="w3-dropdown-hover">
-            <button class="w3-button">Item</button>
+            <button class="w3-button w3-border-bottom">Item</button>
+            <div class="w3-dropdown-content w3-bar-block w3-border">
+                <a href="#" class="w3-bar-item w3-button w3-border-bottom">Add</a>
+                <a href="#" class="w3-bar-item w3-button w3-border-bottom">Edit</a>
+                <a href="#" class="w3-bar-item w3-button w3-border-bottom">Delete</a>
+            </div>
         </div> 
         <div class="w3-dropdown-hover">
-            <button class="w3-button">Book</button>
+            <button class="w3-button w3-border-bottom">Book</button>
+            <div class="w3-dropdown-content w3-bar-block w3-border">
+                <a href="#" class="w3-bar-item w3-button w3-border-bottom">Add</a>
+                <a href="#" class="w3-bar-item w3-button w3-border-bottom">Edit</a>
+                <a href="#" class="w3-bar-item w3-button w3-border-bottom">Delete</a>
+            </div>
         </div> 
-    </div>
+    </div> --}}
     
     <div class="ml-4">
         {{$slot}}

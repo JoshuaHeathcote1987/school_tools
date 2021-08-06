@@ -7,11 +7,11 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
-use App\Models\Student;
-use App\Models\Teacher;
+use App\Models\Item;
 
-class StudentsExport implements FromView, ShouldAutoSize
+class ItemExport implements FromView, ShouldAutoSize
 {
+
     public $data;
 
     public function __construct($data)
@@ -19,9 +19,12 @@ class StudentsExport implements FromView, ShouldAutoSize
         $this->data = $data;
     }
 
+    /**
+    * @return \Illuminate\Support\Collection
+    */
     public function view(): View
     {
-        return view('export.teacher-students', [
+        return view('export.item', [
             'data' => $this->data    
         ]);
     }
