@@ -1,5 +1,18 @@
 <div class="container mt-4 mb-4 bg-white shadow-sm rounded-lg" style="border: 1px solid grey;">
 
+    <div wire:offline>
+        <div style="display:flex; justify-content:center; align-items:center; background-color:black; position:fixed; left:0px; top:0px; z-index:9999; width: 100%; height: 100%; opacity: 0.90">
+            <p class="text-white">Offline...</p>
+        </div>
+    </div>
+
+    <div wire:loading.delay wire:target="getStudent, getTeacher">
+        <div style="display:flex; justify-content:center; align-items:center; background-color:black; position:fixed; left:0px; top:0px; z-index:9999; width: 100%; height: 100%; opacity: 0.90">
+            <div class="spinner-border text-warning" role="status">
+            </div>
+        </div>
+    </div>
+
     {{-- To attain knowledge, add things every day; To attain wisdom, subtract things every day. --}}
     <div class="row mt-3 mb-0 pb-0">
         @foreach($teachers as $teacher)
@@ -16,16 +29,13 @@
     @if($teacherStudentFlipFlop)
         <div class="row my-4">
             <div class="col-lg-4">
-                <img type="button" class="img-thumbnail d-block mx-auto" style="width: 100%; height: auto;" src="{{asset('storage/'.$teacherImage)}}" alt="" srcset="" data-toggle="modal" data-target="#showTeacherModal" wire:click="">
+                <img type="button" class="img-thumbnail d-block mx-auto" style="width: 100%; height: auto;" src="{{asset('storage/'.$teacherImage)}}" alt="" srcset="" data-toggle="modal" data-target="#showTeacherModal">
                 <p class="text-center">{{$teacherName}} {{$teacherSurname}}</p>
             </div>
             <div class="col-lg-8">
                 <div class="row">
                     @foreach($studentsTeacher as $student)
                         <div class="col-lg-3">
-                            @php
-                                $student->image = substr($student->image, 7);
-                            @endphp
                             <img style="width: 100%; height: auto;" type="button" class="img-thumbnail" src="{{asset('storage/'.$student->image)}}" alt="" srcset="" data-toggle="modal" data-target="#showStudentModal" wire:click="getStudent('{{$student->id}}')">
                             <p class="text-center">{{$student->name}} {{$student->surname}}</p>
                         </div>
@@ -90,7 +100,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="form-group w-100 mx-4">
-                                <label for="exampleFormControlSelect2">Example multiple select</label>
+                                <label for="exampleFormControlSelect2">Select Teacher</label>
                                 <select class="form-control" id="exampleFormControlSelect2" wire:model.defer="teacherSelection" >
                                     <option>-- Select a Teacher --</option>
                                     @foreach($teachers as $teacher)
@@ -121,19 +131,21 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <div class="row">
-                            <div class="col-lg-10 mx-auto">
-                                <img class="img-thumbnail mx-auto" src="{{asset('storage/'.$teacherImage)}}" alt="" srcset="">
-                                <div class="form-group mx-auto">
-                                    <label for="exampleInputEmail1">Name</label>
-                                    <input type="text" class="form-control" id="" aria-describedby="emailHelp" value="{{$teacherName}}">
-                                </div>
-                                <div class="form-group mx-auto">
-                                    <label for="exampleInputEmail1">Name</label>
-                                    <input type="text" class="form-control" id="" aria-describedby="emailHelp" value="{{$teacherSurname}}">
-                                </div>
+                        <div class="col-lg-12 mx-auto">
+                            <img class="img-thumbnail mx-auto" src="{{asset('storage/'.$teacherImage)}}" alt="" srcset="">
+                            <div class="form-group mx-auto">
+                                <label for="exampleInputEmail1">Name</label>
+                                <input type="text" class="form-control" id="" aria-describedby="emailHelp" wire:model.defer="teacherName">
                             </div>
-                        </div>     
+                            <div class="form-group mx-auto">
+                                <label for="exampleInputEmail1">Surname</label>
+                                <input type="text" class="form-control" id="" aria-describedby="emailHelp" wire:model.defer="teacherSurname">
+                            </div>
+                            <div class="custom-file mt-3">
+                                <input type="file" class="custom-file-input" id="custom-file-input" wire:model.defer="teacherPhoto">
+                                <label class="custom-file-label" for="customFile" wire:ignore>Choose photo</label>
+                            </div>
+                        </div>    
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -162,15 +174,15 @@
                                 <img class="img-thumbnail d-block mx-auto" src="{{asset('storage/'.$studentPhotoHolder)}}" alt="" srcset="">
                                 <div class="custom-file mt-3">
                                     <input type="file" class="custom-file-input" id="custom-file-input" wire:model.defer="studentPhoto">
-                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                    <label class="custom-file-label" for="customFile" wire:ignore>Choose file</label>
                                 </div>
                                 <div class="form-group mt-3">
                                     <label for="exampleInputEmail1">Name</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" wire:model="studentName">
+                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" wire:model.defer="studentName">
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Surname</label>
-                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" wire:model="studentSurname">
+                                    <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" wire:model.defer="studentSurname">
                                 </div>    
                             </div>
                             
@@ -179,7 +191,7 @@
                                 <img class="img-thumbnail d-block mx-auto" src="{{asset('storage/'.$annePhotoHolder)}}" alt="">
                                 <div class="custom-file mt-3">
                                     <input type="file" class="custom-file-input" id="custom-file-input" wire:model.defer="annePhoto">
-                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                    <label class="custom-file-label" for="customFile" wire:ignore>Choose file</label>
                                 </div>
                                 <div class="form-group mt-3">
                                     <label for="exampleInputEmail1">Name</label>
@@ -204,7 +216,7 @@
                                 <img class="img-thumbnail d-block mx-auto" src="{{asset('storage/'.$babaPhotoHolder)}}" alt="">
                                 <div class="custom-file mt-3">
                                     <input type="file" class="custom-file-input" id="custom-file-input" wire:model.defer="babaPhoto">
-                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                    <label class="custom-file-label" for="customFile" wire:ignore>Choose file</label>
                                 </div>
                                 <div class="form-group mt-3">
                                     <label for="exampleInputEmail1">Name</label>
@@ -278,8 +290,8 @@
                             </div>
                             <div class="col-lg-9">
                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="custom-file-input" wire:model="studentPhoto">
-                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                    <input type="file" class="custom-file-input" id="custom-file-input" wire:model.defer="studentPhoto">
+                                    <label class="custom-file-label" for="customFile" wire:ignore>Choose file</label>
                                 </div>
                             </div>
                         </div>

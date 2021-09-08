@@ -16,7 +16,7 @@
                         <div class="col-lg-9">
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="custom-file-input" wire:model="photo">
-                                <label class="custom-file-label" for="customFile">Choose file</label>
+                                <label class="custom-file-label" for="customFile" wire:ignore>Choose file</label>
                             </div>
                         </div>
                     </div>
@@ -39,18 +39,16 @@
 
                     <h4 class="text-center">Choose your class Mascott...</h4>
                     <div class="alert alert-dark mt-3 mx-2 overflow-auto" style="height: 300px;" role="">
-                        @foreach(array_chunk($imageArray, ceil(count($imageArray)/4)) as $row)
-                            <div class="row">
-                                @foreach($row as $image)
-                                    <div class="col-lg-4">
-                                        <label>
-                                            <input type="radio" name="product" class="card-input-element" />
-                                            <img wire:click="setImageMascott('{{$image}}')" class="img-thumbnail card-input" src="{{asset('storage/'.$image)}}" alt="" srcset="">
-                                        </label>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @endforeach
+                        <div class="row">
+                            @foreach($imageArray as $image)
+                                <div class="col-lg-4">
+                                    <label>
+                                        <input type="radio" name="product" class="card-input-element" />
+                                        <img wire:click="setImageMascott('{{$image}}')" class="img-thumbnail card-input" src="{{asset('storage/'.$image)}}" alt="" srcset="">
+                                    </label>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

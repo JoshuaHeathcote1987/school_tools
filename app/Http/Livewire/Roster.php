@@ -22,7 +22,7 @@ class Roster extends Component
 
     public $teachers, $students, $teacher, $student;
 
-    public $teacherId, $teacherName, $teacherSurname, $teacherImage, $teacherSelection;
+    public $teacherId, $teacherName, $teacherSurname, $teacherImage, $teacherSelection, $teacherPhoto;
 
     public $studentId, $studentName, $studentSurname, $studentsTeacher, $studentPhoto, $studentPhotoHolder;
 
@@ -44,9 +44,6 @@ class Roster extends Component
         $surname = $this->studentSurname;
         $id = $this->studentId;
 
-        // Get the student, check if there is or isn't a photo, and if there is, 
-        // replace the orignal. Then continue to update the inputs.
-
         $student = DB::table('students')
         ->where('students.id', $this->studentId)
         ->get();
@@ -60,8 +57,8 @@ class Roster extends Component
                 'studentPhoto' => 'nullable|image|max:10000',
             ]);
     
-            $photo = $this->studentPhoto ?  $this->studentPhoto->store('public/img/students') : 'public/img/parents/no-photo-available.png';  
-
+            $photo = $this->studentPhoto ?  $this->studentPhoto->store('public/img/students') : '/public/img/placeholder.png';  
+            $photo = substr($photo, 7);
 
             $affected = DB::table('students')
             ->where('id', $id)
@@ -77,7 +74,10 @@ class Roster extends Component
                 'surname' => $surname,
         ]);
 
+        // $this->reset(['studentName', 'studentSurname', 'studentId', 'studentPhoto']);
+
         $this->getStudents();
+
     }
 
     public function saveMother()
@@ -98,9 +98,6 @@ class Roster extends Component
 
         if(sizeof($anne) != 0)
         {
-            // Checks if there is an image, if not no new image is not uploaded, but 
-            // if there is an image, then the orignal file is delete and replaced 
-            // with the new one.
             if(!empty($this->annePhoto))
             {
                 Storage::delete($anne[0]->image);
@@ -109,7 +106,8 @@ class Roster extends Component
                     'annePhoto' => 'nullable|image|max:10000',
                 ]);
         
-                $photo = $this->annePhoto ?  $this->annePhoto->store('public/img/parents') : 'public/img/parents/no-photo-available.png';  
+                $photo = $this->annePhoto ?  $this->annePhoto->store('public/img/parents') : '/public/img/placeholder.png';  
+                $photo = substr($photo, 7);
 
                 $affected = DB::table('parents')
                 ->where('id', $anne[0]->id)
@@ -134,7 +132,8 @@ class Roster extends Component
                 'annePhoto' => 'nullable|image|max:10000',
             ]);
     
-            $photo = $this->annePhoto ?  $this->annePhoto->store('public/img/parents') : 'public/img/parents/no-photo-available.png';      
+            $photo = $this->annePhoto ?  $this->annePhoto->store('public/img/parents') : '/public/img/placeholder.png';  
+            $photo = substr($photo, 7);    
     
             $anne = Genitor::updateOrCreate([
                 'mother' => $mother,
@@ -185,7 +184,8 @@ class Roster extends Component
                     'babaPhoto' => 'nullable|image|max:10000',
                 ]);
         
-                $photo = $this->babaPhoto ?  $this->babaPhoto->store('public/img/parents') : 'public/img/parents/no-photo-available.png';  
+                $photo = $this->babaPhoto ?  $this->babaPhoto->store('public/img/parents') : '/public/img/placeholder.png';
+                $photo = substr($photo, 7);  
 
                 $affected = DB::table('parents')
                 ->where('id', $father[0]->id)
@@ -210,7 +210,8 @@ class Roster extends Component
                 'babaPhoto' => 'nullable|image|max:10000',
             ]);
     
-            $photo = $this->babaPhoto ?  $this->babaPhoto->store('public/img/parents') : 'public/img/parents/no-photo-available.png';      
+            $photo = $this->babaPhoto ?  $this->babaPhoto->store('public/img/parents') : '/public/img/placeholder.png';    
+            $photo = substr($photo, 7);  
     
             $father = Genitor::updateOrCreate([
                 'mother' => $mother,
@@ -279,7 +280,7 @@ class Roster extends Component
         $this->studentId = $student->id;
         $this->studentName = $student->name;
         $this->studentSurname = $student->surname;
-        $this->studentPhotoHolder = substr($student->image, 7);
+        $this->studentPhotoHolder = $student->image;
 
         // Get parent details
         $this->mother = DB::table('parents')
@@ -303,7 +304,7 @@ class Roster extends Component
             $this->annePhotoHolder = $this->mother[0]->image;
             $this->anneTelephone = $this->mother[0]->phone;
             $this->anneEmail = $this->mother[0]->email;
-            $this->annePhotoHolder = substr($this->annePhotoHolder, 7);
+            $this->annePhotoHolder = $this->annePhotoHolder;
         }
         else
         {
@@ -321,7 +322,7 @@ class Roster extends Component
             $this->babaPhotoHolder = $this->father[0]->image;
             $this->babaTelephone = $this->father[0]->phone;
             $this->babaEmail = $this->father[0]->email;
-            $this->babaPhotoHolder = substr($this->babaPhotoHolder, 7);
+            $this->babaPhotoHolder = $this->babaPhotoHolder;
         }
         else
         {
@@ -420,19 +421,24 @@ class Roster extends Component
             ->get();
     }
 
+    public function getTeachers() 
+    {
+        $this->teachers = Teacher::all();
+    }
+
     public function addStudent()
     {
-        $teacher = json_decode($this->teacherSelection);
-
         $this->validate([
-            'studentPhoto' => 'nullable|image|max:10000',
+            'studentPhoto' => 'image|max:10000',
         ]);
+
+        $teacher = json_decode($this->teacherSelection);
 
         $student = new Student();
         $student->name = $this->studentName;
         $student->surname = $this->studentSurname;
-        $imageLocation = $this->studentPhoto ?  $this->studentPhoto->store('public/img/students') : 'no-photo-available.png';
-        // $imageLocation = substr($imageLocation, 7); // There is a problem where the teacher and student have differnet algo for saving images, it needs to be fixed.
+        $imageLocation = $this->studentPhoto ?  $this->studentPhoto->store('public/img/students') : '/public/img/placeholder.png';
+        $imageLocation = substr($imageLocation, 7);
         $student->image = $imageLocation;
 
         $student->save();
@@ -452,12 +458,42 @@ class Roster extends Component
 
         $this->getStudents();
 
-        $this->photo = null;
+        $this->reset(['teacherSelection', 'studentName', 'studentSurname', 'studentPhoto']);
     }
 
     public function updateTeacher()
     {
+        $teacher_id = $this->teacherId;
+        $teacher_name = $this->teacherName;
+        $teacher_surname = $this->teacherSurname;
+        $teacher_photo = $this->teacherPhoto;
+
+
+
+        switch ($teacher_photo) {
+            case null:
+                $teacher = Teacher::find($teacher_id);
+                $teacher->name = $teacher_name;
+                $teacher->surname = $teacher_surname;
+                $teacher->save();
+                break;
+            
+            default:
+                $this->validate([
+                    'teacherPhoto' => 'nullable|image|max:10000',
+                ]);
         
+                $teacher_photo = $teacher_photo ?  $teacher_photo->store('public/img/teachers') : '/public/img/placeholder.png';
+                $teacher_photo = substr($teacher_photo, 7);  
+                $teacher = Teacher::find($teacher_id);
+                $teacher->name = $teacher_name;
+                $teacher->surname = $teacher_surname;
+                $teacher->image = $teacher_photo;
+                $teacher->save();
+                break;
+        }
+
+        redirect('/roster');
     }
 
     public function swapStudent()
@@ -478,6 +514,7 @@ class Roster extends Component
     public function hydrate()
     {
         $this->getStudents();
+        
     }
 
     public function mount()

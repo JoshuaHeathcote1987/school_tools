@@ -19,25 +19,20 @@ class Register extends Component
     use WithFileUploads;
 
     public $message = false;
-
     public $name;
-
     public $photo;
-
     public $students;
     public $teachers;
     public $attendances;
-
     public $teacher;
     public $teacherId;
     public $teacherName;
     public $teacherSurname;
-
     public $studentId;
     public $studentName;
     public $studentSurname;
-
     public $studentSelected;
+    public $showTable = false;
 
     public $months = array(
         'January',
@@ -111,30 +106,34 @@ class Register extends Component
     public function addTeacher()
     {
         $this->validate([
-            'photo' => 'nullable|image|max:10000',
+            'photo' => 'image|max:10000',
         ]);
 
         $teacher = new Teacher();
         $teacher->name = $this->teacherName;
         $teacher->surname = $this->teacherSurname;
-        $imageLocation = $this->photo ?  $this->photo->store('public/img/teachers') : 'no-photo-available.png';
+        $imageLocation = $this->photo ?  $this->photo->store('public/img/teachers') : '/public/img/placeholder.png';
         $imageLocation = substr($imageLocation, 7);
         $teacher->image = $imageLocation;
         $teacher->mascott = $this->imageMascott;
         $teacher->save();
         $this->teachers = Teacher::orderBy('name', 'ASC')->get(); 
-        $this->photo = null;
+        $this->reset(['teacherName', 'teacherSurname', 'imageMascott']);
     }
 
     public function addStudent()
     {
+        $this->validate([
+            'photo' => 'image|max:10000',
+        ]);
+
         $teacher = json_decode($this->teacher);
 
         $student = new Student();
         $student->name = $this->studentName;
         $student->surname = $this->studentSurname;
-        $imageLocation = $this->photo ?  $this->photo->store('public/img/students') : 'no-photo-available.png';
-        // $imageLocation = substr($imageLocation, 7);
+        $imageLocation = $this->photo ?  $this->photo->store('public/img/students') : '/public/img/placeholder.png';
+        $imageLocation = substr($imageLocation, 7);
         $student->image = $imageLocation;
 
         $student->save();
@@ -154,9 +153,7 @@ class Register extends Component
 
         $this->getAttendanceRecords();
 
-        $this->photo = null;
-        $this->studentName = null;
-        $this->studentSurname = null;
+        $this->reset(['studentName', 'studentSurname', 'photo']);
     }
 
     public function editStudent()
@@ -172,8 +169,6 @@ class Register extends Component
             $this->students = Student::with('attendance')->whereHas('attendance', function ($query) {
                 $query->where('teacher_id', $this->teacherId);
             })->get();
-
-
 
             $this->studentName = null;
             $this->studentSurname = null; 
@@ -239,8 +234,7 @@ class Register extends Component
 
     public function getAttendanceRecords()
     {
-        try
-        {
+
             $teacher = json_decode($this->teacher);
             $this->teacherId = $teacher->id;
             $month = $this->convertMonth($this->month);
@@ -251,6 +245,21 @@ class Register extends Component
             $this->students = Student::with('attendance')->whereHas('attendance', function ($query) {
                 $query->where('teacher_id', $this->teacherId);
             })->get();
+
+            // $this->students = DB::table('students')
+            //     ->where('teacher_students.teacher_id', '=', $this->teacherId)
+            //     ->get();
+
+            // $users = DB::table('users')
+            //     ->join('contacts', 'users.id', '=', 'contacts.user_id')
+            //     ->join('orders', 'users.id', '=', 'orders.user_id')
+            //     ->select('users.*', 'contacts.phone', 'orders.price')
+            //     ->get();
+                
+            $this->students = DB::table('students')
+                ->join('teacher_students', 'students.id', '=', 'teacher_students.student_id')
+                ->where('teacher_students.teacher_id', '=', $this->teacherId)
+                ->get();
     
             $this->attendances = DB::table('attendances')
                 ->where('attendances.teacher_id', '=', $this->teacherId)
@@ -259,11 +268,8 @@ class Register extends Component
                 ->get();
 
             $this->optionButtons = "";
-        }
-        catch (\Throwable $th) 
-        {
-            $this->message = true;
-        } 
+
+            $this->showTable = true;
     }
 
     public function export()
@@ -375,6 +381,10 @@ class Register extends Component
             ->where('attendances.month', '=', $this->month)
             ->where('attendances.year', '=', $this->year)
             ->get();
+
+            $this->students = Student::with('attendance')->whereHas('attendance', function ($query) {
+                $query->where('teacher_id', $this->teacherId);
+            })->get();
         }
         catch (\Throwable $th)
         {

@@ -1,6 +1,17 @@
 <div class="container mt-4 mb-4 bg-white shadow-sm rounded-lg" style="border: 1px solid grey;"> 
 
-    {{-- A good traveler has no fixed plans and is not intent upon arriving. --}}
+    <div wire:offline>
+        <div style="display:flex; justify-content:center; align-items:center; background-color:black; position:fixed; left:0px; top:0px; z-index:9999; width: 100%; height: 100%; opacity: 0.90">
+            <p class="text-white">Offline...</p>
+        </div>
+    </div>
+
+    <div wire:loading>
+        <div style="display:flex; justify-content:center; align-items:center; background-color:black; position:fixed; left:0px; top:0px; z-index:9999; width: 100%; height: 100%; opacity: 0.75">
+            <div class="spinner-border text-danger" role="status">
+            </div>
+        </div>
+    </div>
 
     {{-- Code into it so that when a letter is selection on the modal screen of add item, that the selection will change the shelf number IMPORTANT --}}
     <div class="row mr-1 mt-3 px-0"> 
