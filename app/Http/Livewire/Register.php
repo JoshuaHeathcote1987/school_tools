@@ -106,7 +106,7 @@ class Register extends Component
     public function addTeacher()
     {
         $this->validate([
-            'photo' => 'image|max:10000',
+            'photo' => 'nullable|image|max:10000',
         ]);
 
         $teacher = new Teacher();

@@ -429,7 +429,7 @@ class Roster extends Component
     public function addStudent()
     {
         $this->validate([
-            'studentPhoto' => 'image|max:10000',
+            'studentPhoto' => 'nullable|image|max:10000',
         ]);
 
         $teacher = json_decode($this->teacherSelection);

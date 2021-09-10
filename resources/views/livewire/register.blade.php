@@ -16,14 +16,12 @@
     @if($message)
     <div class="row mt-3">
         <div class="col-12">
-            
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong>Holy guacamole!</strong> {{$message}}.
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> {{$message}}.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
         </div>
     </div>
     @endif
@@ -66,7 +64,7 @@
                     <select wire:model.lazy="teacher" class="form-control" id="exampleFormControlSelect1">
                         <option selected value> -- select an option -- </option>
                         @foreach($teachers as $teacher)
-                            <option value="{{$teacher}}">{{$teacher->name}}</option>
+                            <option value="{{$teacher}}">{{substr($teacher->name, 0, 1)}}. {{$teacher->surname}}</option>
                         @endforeach
                     </select>
                 </div>

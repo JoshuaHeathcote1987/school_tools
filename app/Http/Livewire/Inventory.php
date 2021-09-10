@@ -117,7 +117,7 @@ class Inventory extends Component
             'amount' => $this->itemAmount,
             'shelf_sec' => $this->itemLetter,
             'shelf_num' => $this->itemNumber,
-            'img' => $this->photo ?  $this->photo->store('public/img') : 'no-photo-available.png',
+            'img' => $this->photo ?  $this->photo->store('public/img') : '/public/img/placeholder.png',
         ]);
 
         $this->itemName = null;
