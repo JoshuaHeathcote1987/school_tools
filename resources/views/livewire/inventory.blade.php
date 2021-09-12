@@ -1,5 +1,43 @@
 <div class="container mt-4 mb-4 bg-white shadow-sm rounded-lg" style="border: 1px solid grey;"> 
 
+    <div class="mt-4">
+        @error('itemName') 
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> {{ $message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @enderror
+
+        @error('itemAmount') 
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> {{ $message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @enderror
+
+        @error('itemLetter') 
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> {{ $message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @enderror
+
+        @error('itemNumber') 
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> {{ $message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @enderror
+    </div>
+
     <div wire:offline>
         <div style="display:flex; justify-content:center; align-items:center; background-color:black; position:fixed; left:0px; top:0px; z-index:9999; width: 100%; height: 100%; opacity: 0.90">
             <p class="text-white">Offline...</p>
@@ -349,7 +387,7 @@
                             <div class="col-lg-8">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="custom-file-input" wire:model="photo">
-                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                    <label class="custom-file-label" for="customFile" wire:ignore>Choose file</label>
                                 </div>
                             </div>
                         </div>
@@ -420,7 +458,7 @@
                                 <label for="" class="col-sm-2 col-form-label text-right">Section</label>
                             </div>
                             <div class="col-lg-4">
-                                <select class="form-control" id="exampleFormControlSelect2" wire:click="setSectionAmount" wire:model.defer="itemLetter">
+                                <select class="form-control" id="exampleFormControlSelect2" wire:model.defer="itemLetter">
                                     <option value="A">A</option>
                                     <option value="B">B</option>
                                     <option value="C">C</option>
@@ -441,7 +479,7 @@
                             <div class="col-lg-8">
                                 <div class="custom-file">
                                     <input type="file" class="custom-file-input" id="custom-file-input" wire:model="photo">
-                                    <label class="custom-file-label" for="customFile">Choose file</label>
+                                    <label class="custom-file-label" for="customFile" wire:ignore>Choose file</label>
                                 </div>
                             </div>
                         </div>

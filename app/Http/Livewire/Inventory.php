@@ -110,8 +110,12 @@ class Inventory extends Component
     {
         $this->validate([
             'photo' => 'nullable|image|max:10000',
+            'itemName' => 'required|string|max: 50',
+            'itemAmount' => 'required|integer',
+            'itemLetter' => 'required',
+            'itemNumber' => 'required',
         ]);
-    
+        
         $item = Item::create([
             'name' => $this->itemName,
             'amount' => $this->itemAmount,
@@ -120,9 +124,7 @@ class Inventory extends Component
             'img' => $this->photo ?  $this->photo->store('public/img') : '/public/img/placeholder.png',
         ]);
 
-        $this->itemName = null;
-        $this->itemAmount = null;
-        $this->photo = null;
+        $this->reset(['itemName', 'itemAmount', 'photo']);
     
         $this->items = Item::all();
     }
@@ -139,15 +141,26 @@ class Inventory extends Component
 
     public function setEditItem()
     {
-        $item = Item::where('id', $this->itemId)
-            ->update([
-                'name' => $this->itemName,
-                'amount' => $this->itemAmount,
-                'shelf_sec' => $this->itemLetter,
-                'shelf_num' => $this->itemNumber,
-                'img' => $this->photo ?  $this->photo->store('public/img') : 'no-photo-available.png',
-            ]);
+        $this->validate([
+            'photo' => 'nullable|image|max:10000',
+            'itemName' => 'required|string|max: 50',
+            'itemAmount' => 'required|integer',
+            'itemLetter' => 'required',
+            'itemNumber' => 'required',
+        ]);
+        
+        $item = Item::where('id', $this->itemId)->first();
+        $image = $item->img;
 
+        $item = Item::where('id', $this->itemId)
+        ->update([
+            'name' => $this->itemName,
+            'amount' => $this->itemAmount,
+            'shelf_sec' => $this->itemLetter,
+            'shelf_num' => $this->itemNumber,
+            'img' => $this->photo ?  $this->photo->store('public/img') : $image,
+        ]);
+        
         $this->items = Item::all();
     }
 

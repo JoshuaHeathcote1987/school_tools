@@ -82,6 +82,13 @@ class Roster extends Component
 
     public function saveMother()
     {
+        $this->validate([
+            'anneName' => 'required|string|max: 20',
+            'anneSurname' => 'required|string|max: 20',
+            'anneTelephone' => 'string|max: 20',
+            'anneEmail' => 'string|max: 40',
+        ]);
+
         $mother = true;
         $studentId = $this->studentId;
         $name = $this->anneName;
@@ -107,7 +114,7 @@ class Roster extends Component
                 ]);
         
                 $photo = $this->annePhoto ?  $this->annePhoto->store('public/img/parents') : '/public/img/placeholder.png';  
-                $photo = substr($photo, 7);
+                
 
                 $affected = DB::table('parents')
                 ->where('id', $anne[0]->id)
@@ -155,6 +162,13 @@ class Roster extends Component
 
     public function saveFather()
     {
+        $this->validate([
+            'babaName' => 'required|string|max: 20',
+            'babaSurname' => 'required|string|max: 20',
+            'babaTelephone' => 'string|max: 20',
+            'babaEmail' => 'string|max: 40',
+        ]);
+
         $mother = false;
         $studentId = $this->studentId;
         $name = $this->babaName;
@@ -430,6 +444,9 @@ class Roster extends Component
     {
         $this->validate([
             'studentPhoto' => 'nullable|image|max:10000',
+            'studentName' => 'required|string|max:20',
+            'studentSurname' => 'required|string|max:20',
+            'teacherSelection' => 'required',
         ]);
 
         $teacher = json_decode($this->teacherSelection);
@@ -463,12 +480,15 @@ class Roster extends Component
 
     public function updateTeacher()
     {
+        $this->validate([
+            'teacherName' => 'required|string|max: 20',
+            'teacherSurname' => 'required|string|max: 20',
+        ]);
+
         $teacher_id = $this->teacherId;
         $teacher_name = $this->teacherName;
         $teacher_surname = $this->teacherSurname;
         $teacher_photo = $this->teacherPhoto;
-
-
 
         switch ($teacher_photo) {
             case null:
@@ -498,6 +518,10 @@ class Roster extends Component
 
     public function swapStudent()
     {
+        $this->validate([
+            'teacherSelection' => 'required',
+        ]);
+
         $affected = DB::table('teacher_students')
             ->where('student_id', $this->studentId)
             ->where('teacher_id', $this->teacherId)

@@ -1,5 +1,74 @@
 <div class="container mt-4 mb-4 bg-white shadow-sm rounded-lg" style="border: 1px solid grey;">
 
+    <div class="mt-4">
+        @error('teacherName')
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> {{ $message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @enderror
+
+        @error('teacherSurname')
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> {{ $message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @enderror
+
+        @error('imageMascott') 
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> {{ $message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @enderror
+
+        @error('month') 
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> {{ $message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @enderror
+
+        @error('year') 
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> {{ $message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @enderror
+
+        @error('teacher') 
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> {{ $message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @enderror
+        
+        @if($message)
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Holy guacamole!</strong> {{$message}}.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <div wire:offline>
         <div style="display:flex; justify-content:center; align-items:center; background-color:black; position:fixed; left:0px; top:0px; z-index:9999; width: 100%; height: 100%; opacity: 0.90">
             <p class="text-white">Offline...</p>
@@ -12,23 +81,10 @@
             </div>
         </div>
     </div>
-    
-    @if($message)
-    <div class="row mt-3">
-        <div class="col-12">
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>Holy guacamole!</strong> {{$message}}.
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        </div>
-    </div>
-    @endif
 
     <div class="row mt-4 mb-3">
         <div class="col-lg-12">
-            <h2 class="font-weight-bold">{{$date}}</h2>
+            <h2 class="font-weight-bold ml-3">{{$date}}</h2>
         </div>
     </div>
 
@@ -79,9 +135,7 @@
     <hr style="background-color: black;">
 
     @if($showTable)
-        
         <table class="table table-hover table-sm mb-4" style="border-left: 0px solid black; border-right: 0px solid black; border-bottom: 0px solid black; border-top: 0px solid black;">
-            
             <thead>
                 <tr>
                     <th style="border-color: black; background-color: #ab6369; color:white;" scope="col">Students</th>
@@ -128,20 +182,70 @@
 
     {{-- MODALS --}}
     {{-- ADD TEACHER --}}
-    @include('include.livewire-modal.add-teacher')
+    <form autocomplete="off">
+        <div class="modal fade" id="teacherAddModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Teacher</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <div class="col-lg-3">
+                                <label for="" class="col-sm-2 col-form-label text-right">Photo</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="custom-file-input" wire:model="photo">
+                                    <label class="custom-file-label" for="customFile" wire:ignore>Choose file</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-3">
+                                <label for="" class="col-sm-2 col-form-label text-right">Forename</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" wire:model.defer="teacherName">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-lg-3">
+                                <label for="" class="col-sm-2 col-form-label text-right">Surname</label>
+                            </div>
+                            <div class="col-lg-9">
+                                <input type="text" class="form-control" wire:model.defer="teacherSurname">
+                            </div>
+                        </div>
+    
+                        <h4 class="text-center">Choose your class Mascott...</h4>
+                        <div class="alert alert-dark mt-3 mx-2 overflow-auto" style="height: 300px;" role="">
+                            <div class="row">
+                                @foreach($imageArray as $image)
+                                    <div class="col-lg-4">
+                                        <label>
+                                            <input type="radio" name="product" class="card-input-element" />
+                                            <img wire:click="setImageMascott('{{$image}}')" class="img-thumbnail card-input" src="{{asset('storage/'.$image)}}" alt="" srcset="">
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" wire:click="addTeacher">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 
     {{-- ADD STUDENT --}}
     @include('include.livewire-modal.add-student')
 
-    @if(!$students == null)
-        {{-- EDIT STUDENT --}}
-        @include('include.livewire-modal.edit-student')
-
-        {{-- DELETE STUDENT --}}
-        @include('include.livewire-modal.delete-student')
-    @endif
-
-    {{-- ADMIN PASSWORD --}}
-    @include('include.livewire-modal.admin-password')
 </div>
 

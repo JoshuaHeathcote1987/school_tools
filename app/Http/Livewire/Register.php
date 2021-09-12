@@ -107,6 +107,9 @@ class Register extends Component
     {
         $this->validate([
             'photo' => 'nullable|image|max:10000',
+            'teacherName' => 'required|string|max:20',
+            'teacherSurname' => 'required|string|max:20',
+            'imageMascott' => 'required|string',
         ]);
 
         $teacher = new Teacher();
@@ -234,42 +237,47 @@ class Register extends Component
 
     public function getAttendanceRecords()
     {
+        $this->validate([
+            'month' => 'required',
+            'year' => 'required',
+            'teacher' => 'required',
+        ]);
 
-            $teacher = json_decode($this->teacher);
-            $this->teacherId = $teacher->id;
-            $month = $this->convertMonth($this->month);
-            $year = $this->year;
-    
-            $this->days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-    
-            $this->students = Student::with('attendance')->whereHas('attendance', function ($query) {
-                $query->where('teacher_id', $this->teacherId);
-            })->get();
+        $teacher = json_decode($this->teacher);
+        $this->teacherId = $teacher->id;
+        $month = $this->convertMonth($this->month);
+        $year = $this->year;
 
-            // $this->students = DB::table('students')
-            //     ->where('teacher_students.teacher_id', '=', $this->teacherId)
-            //     ->get();
+        $this->days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
-            // $users = DB::table('users')
-            //     ->join('contacts', 'users.id', '=', 'contacts.user_id')
-            //     ->join('orders', 'users.id', '=', 'orders.user_id')
-            //     ->select('users.*', 'contacts.phone', 'orders.price')
-            //     ->get();
-                
-            $this->students = DB::table('students')
-                ->join('teacher_students', 'students.id', '=', 'teacher_students.student_id')
-                ->where('teacher_students.teacher_id', '=', $this->teacherId)
-                ->get();
-    
-            $this->attendances = DB::table('attendances')
-                ->where('attendances.teacher_id', '=', $this->teacherId)
-                ->where('attendances.month', '=', $this->month)
-                ->where('attendances.year', '=', $this->year)
-                ->get();
+        $this->students = Student::with('attendance')->whereHas('attendance', function ($query) {
+            $query->where('teacher_id', $this->teacherId);
+        })->get();
 
-            $this->optionButtons = "";
+        // $this->students = DB::table('students')
+        //     ->where('teacher_students.teacher_id', '=', $this->teacherId)
+        //     ->get();
 
-            $this->showTable = true;
+        // $users = DB::table('users')
+        //     ->join('contacts', 'users.id', '=', 'contacts.user_id')
+        //     ->join('orders', 'users.id', '=', 'orders.user_id')
+        //     ->select('users.*', 'contacts.phone', 'orders.price')
+        //     ->get();
+            
+        $this->students = DB::table('students')
+            ->join('teacher_students', 'students.id', '=', 'teacher_students.student_id')
+            ->where('teacher_students.teacher_id', '=', $this->teacherId)
+            ->get();
+
+        $this->attendances = DB::table('attendances')
+            ->where('attendances.teacher_id', '=', $this->teacherId)
+            ->where('attendances.month', '=', $this->month)
+            ->where('attendances.year', '=', $this->year)
+            ->get();
+
+        $this->optionButtons = "";
+
+        $this->showTable = true;
     }
 
     public function export()
