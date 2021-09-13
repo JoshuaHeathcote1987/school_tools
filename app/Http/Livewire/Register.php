@@ -250,9 +250,9 @@ class Register extends Component
 
         $this->days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
 
-        $this->students = Student::with('attendance')->whereHas('attendance', function ($query) {
-            $query->where('teacher_id', $this->teacherId);
-        })->get();
+        // $this->students = Student::with('attendance')->whereHas('attendance', function ($query) {
+        //     $query->where('teacher_id', $this->teacherId);
+        // })->get();
 
         // $this->students = DB::table('students')
         //     ->where('teacher_students.teacher_id', '=', $this->teacherId)
@@ -363,11 +363,7 @@ class Register extends Component
         return $month;
     }
 
-
-
-// ============== Livewire Event Cycle ==============
-
-
+    // ============== Livewire Event Cycle ==============
 
     public function mount()
     {

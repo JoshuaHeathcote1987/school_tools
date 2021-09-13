@@ -9,6 +9,7 @@ use App\Http\Livewire\Register;
 use App\Http\Livewire\Inventory;
 use App\Http\Livewire\Roster;
 use App\Http\Livewire\Book;
+use App\Http\Livewire\Meals;
 
 Route::view('/', 'welcome');
 
@@ -20,6 +21,7 @@ Route::group(['middleware' => [
     'accesscheck'
 ]], function () {
     Route::get('/attendance', Register::class);
+    Route::get('/meals', Meals::class);
     Route::get('/inventory', Inventory::class);
     Route::get('/roster', Roster::class);
     Route::get('/books', Book::class);

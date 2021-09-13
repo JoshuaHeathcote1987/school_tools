@@ -432,6 +432,7 @@ class Roster extends Component
             ->join('teacher_students', 'students.id', '=', 'teacher_students.student_id')
             ->where('teacher_students.teacher_id', $this->teacherId)
             ->select('students.*')
+            ->orderBy('name', 'asc')
             ->get();
     }
 
