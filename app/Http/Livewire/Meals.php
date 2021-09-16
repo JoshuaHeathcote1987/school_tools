@@ -18,6 +18,8 @@ class Meals extends Component
     public $student;
     public $students;
 
+    public $day = [];
+    public $days;
     public $month;
     public $year;
 
@@ -42,20 +44,21 @@ class Meals extends Component
 
     public function getMealRecords()
     {
-        $month = $this->convertMonth($this->month);
-        $year = $this->year;
-        $student = $this->student;
-        // Grab student meal records 
-
-        // student meal record
-        // id, student_id, month, year, breakfast, lunch, dinner
-        $this->showMealPlans = true;
-    }
-
-    public function getStudents()
-    {
+        $this->reset('day');
+        
         $teacher = json_decode($this->teacher);
         $this->teacherId = $teacher->id;
+
+        $month = $this->convertMonth($this->month);
+        $year = $this->year;
+
+        $this->days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+        for ($i=1; $i <= $this->days; $i++) { 
+            $timestamp = strtotime($year.'-'.$month.'-'.$i);
+            $day = date('l', $timestamp);
+            array_push($this->day, $day);
+        }
 
         $this->students = DB::table('students')
             ->join('teacher_students', 'students.id', '=', 'teacher_students.student_id')
@@ -63,6 +66,12 @@ class Meals extends Component
             ->get();
 
         $this->studentDisabled = 'enabled';
+        $this->showMealPlans = true;
+    }
+
+    public function getStudents()
+    {
+        
     }
 
     public function hydrate()
