@@ -84,7 +84,8 @@
 
     <div class="row mt-4 mb-3">
         <div class="col-lg-12">
-            <h2 class="font-weight-bold ml-3">{{$date}}</h2>
+            <h2 class="font-weight-bold ml-3">Attendance</h2>
+            <h4 class="font-weight-bold ml-3">{{$date}}</h4>
         </div>
     </div>
 

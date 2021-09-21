@@ -1,0 +1,13 @@
+
+/* How I ate */
+
+.how-i-ate-input {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+    pointer-events: none;
+}
+  
+.how-i-ate-input:checked + .how-i-ate-label {
+    color: white;
+    background-color: blue;
+}

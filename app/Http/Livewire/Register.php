@@ -267,6 +267,7 @@ class Register extends Component
         $this->students = DB::table('students')
             ->join('teacher_students', 'students.id', '=', 'teacher_students.student_id')
             ->where('teacher_students.teacher_id', '=', $this->teacherId)
+            ->orderBy('name', 'asc')
             ->get();
 
         $this->attendances = DB::table('attendances')

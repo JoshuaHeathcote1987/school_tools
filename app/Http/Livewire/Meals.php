@@ -6,6 +6,9 @@ use Livewire\Component;
 
 use App\Models\Teacher;
 use App\Models\Student;
+use App\Models\Meal;
+
+use Carbon\Carbon;
 
 use DB;
 
@@ -22,6 +25,7 @@ class Meals extends Component
     public $days;
     public $month;
     public $year;
+    public $date;
 
     public $showMealPlans = false;
 
@@ -45,7 +49,7 @@ class Meals extends Component
     public function getMealRecords()
     {
         $this->reset('day');
-        
+
         $teacher = json_decode($this->teacher);
         $this->teacherId = $teacher->id;
 
@@ -63,15 +67,46 @@ class Meals extends Component
         $this->students = DB::table('students')
             ->join('teacher_students', 'students.id', '=', 'teacher_students.student_id')
             ->where('teacher_students.teacher_id', '=', $teacher->id)
+            ->orderBy('name', 'asc')
             ->get();
 
         $this->studentDisabled = 'enabled';
         $this->showMealPlans = true;
     }
 
-    public function getStudents()
+    public function addMeal($selection, $day, $student_id, $meal)
     {
-        
+        $month = $this->convertMonth($this->month);
+        $year = $this->year;
+        $student = Student::where('id', '=', $student_id)->first();
+
+        $entry_check = Meal::where('student_id', '=', $student_id)
+            ->where('day', '=', $day)
+            ->where('month', '=', $month)
+            ->where('year', '=', $year)
+            ->first();
+
+        if ($entry_check == null) {
+            $entry = Meal::create([
+                'student_id' => $student->id,
+                $meal => $selection,
+                'day' => $day,
+                'month' => $month,
+                'year' => $year,
+            ]);
+            return;
+        }
+
+        if ($entry_check != null) {
+            $entry = Meal::where('student_id', '=', $student_id)
+                ->where('day', '=', $day)
+                ->where('month', '=', $month)
+                ->where('year', '=', $year)
+                ->update([$meal => $selection]);
+            return;
+        }
+
+        return;
     }
 
     public function hydrate()
@@ -129,6 +164,7 @@ class Meals extends Component
 
     public function mount()
     {
+        $this->date = Carbon::now()->format('l jS \of F Y');
         $this->teacherId = 1;
         $this->students = Student::all();
         $this->teachers = Teacher::all(); 

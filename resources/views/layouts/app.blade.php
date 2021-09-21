@@ -8,6 +8,8 @@
 
     <link rel="stylesheet" href="css/app.css">
 
+    <link rel="stylesheet" href="css/meals.css">
+
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
     <link rel="stylesheet" href="css/fontawesome.css">
@@ -162,9 +164,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
 
     <script>
+
+
         $(document).ready(function () {
             bsCustomFileInput.init()
         })
+
+        // Radio button checked
+
+        function mealsRadioChecked(radio) {
+            radio.checked  = "true";
+        }
         
         // Not working. Need to fix.
         window.addEventListener("scroll", function() {
@@ -192,6 +202,18 @@
         
         function mouseOut(button) {
             button.style.opacity  = "1";
+        }
+
+        // Meals Food Journal
+        function mouseClickMeals(button) {
+            
+
+            if (button.style.background == "#ffffff") {
+                button.style.background = "#82caaf";
+            }
+            else if (button.style.background == "#82caaf") {
+                button.style.background = "#ffffff";
+            }
         }
 
         // Navbar buttons
