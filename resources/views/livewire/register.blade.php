@@ -249,4 +249,3 @@
     @include('include.livewire-modal.add-student')
 
 </div>
-
