@@ -2,8 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\AttendanceExportController;
+// use App\Http\Controllers\AttendanceExportController;
 use App\Http\Controller\LogoutController;
+use App\Http\Controllers\MealExportController;
 
 use App\Http\Livewire\Register;
 use App\Http\Livewire\Inventory;
@@ -33,6 +34,6 @@ Route::group(['middleware' => [
     });
 });
 
+Route::get('/meals/index', [MealExportController::class, 'index']);
 
-
-Route::get('/attendance/export', [AttendanceExportController::class, 'export'])->name('export');
+Route::get('/meals/topdf', [MealExportController::class, 'toPdf']);

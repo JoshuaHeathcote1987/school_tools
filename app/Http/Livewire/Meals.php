@@ -8,8 +8,12 @@ use App\Models\Teacher;
 use App\Models\Student;
 use App\Models\Meal;
 
+use App\Exports\MealsExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 use Carbon\Carbon;
 
+use PDF;
 use DB;
 
 class Meals extends Component
@@ -27,7 +31,8 @@ class Meals extends Component
     public $year;
     public $date;
 
-    public $showMealPlans = false;
+    public $showMealPlanDates = false;
+    public $showMealPlanLogger = false;
 
     public $studentDisabled = 'disabled';
 
@@ -71,7 +76,7 @@ class Meals extends Component
             ->get();
 
         $this->studentDisabled = 'enabled';
-        $this->showMealPlans = true;
+        $this->showMealPlanDates = true;
     }
 
     public function addMeal($selection, $day, $student_id, $meal)
@@ -109,14 +114,51 @@ class Meals extends Component
         return;
     }
 
+    public function exportMeals($day)
+    {
+        $month = $this->convertMonth($this->month);
+        $year = $this->year;
+        $teacherId = $this->teacherId;
+        $mealObj = [];
+        $pass_to_export = [];
+
+        $collection = collect([]);
+
+        $this->students = DB::table('students')
+            ->join('teacher_students', 'students.id', '=', 'teacher_students.student_id')
+            ->join('meals', 'students.id', '=', 'meals.student_id')
+            ->where('teacher_students.teacher_id', '=', $teacherId)
+            ->orderBy('name', 'asc')
+            ->get();
+
+        array_push($pass_to_export, $day, $month, (int) $year, $this->students);
+
+        return Excel::download(new MealsExport($pass_to_export), 'meals'.'_'.$day.'_'.$this->month.'_'.$this->year.'.xlsx');
+    }
+
     public function hydrate()
     {
         $this->students = DB::table('students')
             ->join('teacher_students', 'students.id', '=', 'teacher_students.student_id')
             ->where('teacher_students.teacher_id', '=', $this->teacherId)
+            ->orderBy('name', 'asc')
             ->get();
     }
 
+    public function mount()
+    {
+        $this->date = Carbon::now()->format('l jS \of F Y');
+        $this->teacherId = 1;
+        $this->students = Student::all();
+        $this->teachers = Teacher::all(); 
+    }
+
+    public function render()
+    {
+        return view('livewire.meals');
+    }
+
+    
     public function convertMonth($month)
     {
         switch($month)
@@ -160,18 +202,5 @@ class Meals extends Component
         }
 
         return $month;
-    }
-
-    public function mount()
-    {
-        $this->date = Carbon::now()->format('l jS \of F Y');
-        $this->teacherId = 1;
-        $this->students = Student::all();
-        $this->teachers = Teacher::all(); 
-    }
-
-    public function render()
-    {
-        return view('livewire.meals');
     }
 }

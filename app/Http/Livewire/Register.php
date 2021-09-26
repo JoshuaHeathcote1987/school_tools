@@ -318,7 +318,6 @@ class Register extends Component
 
     // ============== Functions ==============
 
-
     public function convertMonth($month)
     {
         switch($month)

@@ -81,7 +81,7 @@
 
     <hr style="background-color: black;">
 
-    @if ($showMealPlans)
+    @if ($showMealPlanDates)
         <div class="col-lg-12">
             <div class="row pb-4">
                 @foreach ($day as $index => $aDay)
@@ -98,7 +98,7 @@
     {{-- Modals --}}
     @foreach ($day as $index => $aDay)
         <div class="modal fade" id="staticBackdrop{{$index}}" data-backdrop="static" data-keyboard="false" tabindex="-1"
-            aria-labelledby="staticBackdropLabel" aria-hidden="true"  wire:ignore.self>
+            aria-labelledby="staticBackdropLabel" aria-hidden="true"  wire:ignore>
             <div class="modal-dialog modal-dialog-centered modal-xl">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -151,7 +151,7 @@
                                                     <td>Breakfast</td>
                                                     <td>
                                                         <div class="row">
-                                                            <input class="mx-auto" type="radio" name="{{$student->id}}" wire:click="addMeal(1, {{$index + 1}}, {{$student->id}}, 'breakfast')">
+                                                            <input class="mx-auto" type="radio" name="{{$student->id}}" wire:click="addMeal(2, {{$index + 1}}, {{$student->id}}, 'breakfast')">
                                                         </div>
                                                     </td>
                                                     <td>
@@ -161,7 +161,7 @@
                                                     </td>
                                                     <td>
                                                         <div class="row">
-                                                            <input class="mx-auto" type="radio" name="{{$student->id}}" wire:click="addMeal(3, {{$index + 1}}, {{$student->id}}, 'breakfast')">
+                                                            <input class="mx-auto" type="radio" name="" wire:click="addMeal(3, {{$index + 1}}, {{$student->id}}, 'breakfast')">
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -184,7 +184,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Vegtables</td>
+                                                    <td>Vegetables</td>
                                                     <td>
                                                         <div class="row">
                                                             <input class="mx-auto" type="radio" name="{{$student->id.'2'}}" wire:click="addMeal(1, {{$index + 1}}, {{$student->id}}, 'vegetables')">
@@ -246,7 +246,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Print</button>
+                        <a class="btn btn-primary" wire:click="exportMeals({{$index + 1}})">Print</a>
                     </div>
                 </div>
             </div>
