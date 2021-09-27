@@ -85,7 +85,7 @@
         <div class="col-lg-12">
             <div class="row pb-4">
                 @foreach ($day as $index => $aDay)
-                    <div onmouseover="mouseOverInv(this)" onmouseout="mouseOutInv(this)" class="col-lg-3 p-3 border" wire:click="setStudentMealPlanLogger">
+                    <div onmouseover="mouseOverInv(this)" onmouseout="mouseOutInv(this)" class="col-lg-3 p-3 border" wire:click="setStudentMealPlanLogger({{ $index + 1 }})">
                         <h1>{{ $index + 1 }}</h1>
                         {{ $aDay }}
                     </div>
@@ -227,6 +227,10 @@
                     </table>
                 </div>
             @endforeach
+        </div>
+        <div class="row ml-3 mb-3">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button> // write to show the dates here and hide meals
+            <a class="btn btn-primary ml-3" wire:click="exportMeals({{$this->aDay}})">Print</a>
         </div>
     @endif
 

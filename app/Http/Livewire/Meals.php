@@ -25,6 +25,7 @@ class Meals extends Component
     public $student;
     public $students;
 
+    public $aDay;
     public $day = [];
     public $days;
     public $month;
@@ -52,10 +53,11 @@ class Meals extends Component
         'December',
     );
 
-    public function setStudentMealPlanLogger()
+    public function setStudentMealPlanLogger($day)
     {
         $this->showStudentMealPlanLogger = true;
         $this->showMealPlanDates = false;
+        $this->aDay = $day;
     }
 
     public function setTeacher()
