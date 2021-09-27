@@ -28,11 +28,12 @@ class Meals extends Component
     public $day = [];
     public $days;
     public $month;
+    public $display_month;
     public $year;
     public $date;
 
     public $showMealPlanDates = false;
-    public $showMealPlanLogger = false;
+    public $showStudentMealPlanLogger = false;
 
     public $studentDisabled = 'disabled';
 
@@ -51,14 +52,25 @@ class Meals extends Component
         'December',
     );
 
+    public function setStudentMealPlanLogger()
+    {
+        $this->showStudentMealPlanLogger = true;
+        $this->showMealPlanDates = false;
+    }
+
+    public function setTeacher()
+    {
+        $teacher = json_decode($this->teacher);
+        $this->teacherId = $teacher->id;
+    }
+
     public function getMealRecords()
     {
         $this->reset('day');
 
-        $teacher = json_decode($this->teacher);
-        $this->teacherId = $teacher->id;
-
         $month = $this->convertMonth($this->month);
+
+        $this->display_month = $month;
         $year = $this->year;
 
         $this->days = cal_days_in_month(CAL_GREGORIAN, $month, $year);
@@ -71,12 +83,15 @@ class Meals extends Component
 
         $this->students = DB::table('students')
             ->join('teacher_students', 'students.id', '=', 'teacher_students.student_id')
-            ->where('teacher_students.teacher_id', '=', $teacher->id)
+            ->where('teacher_students.teacher_id', '=', $this->teacherId)
             ->orderBy('name', 'asc')
             ->get();
 
-        $this->studentDisabled = 'enabled';
-        $this->showMealPlanDates = true;
+
+        if ($this->studentDisabled != 'enabled') {
+            $this->studentDisabled = 'enabled';
+            $this->showMealPlanDates = true;
+        }   
     }
 
     public function addMeal($selection, $day, $student_id, $meal)
@@ -198,6 +213,51 @@ class Meals extends Component
                 break;
             case 'December': 
                 $month = 12;
+                break;         
+        }
+
+        return $month;
+    }
+
+    public function convertMonthNumeric($month)
+    {
+        switch($month)
+        {        
+            case 1: 
+                $month = 'January';
+                break;
+            case 2: 
+                $month = 'February';
+                break;
+            case 3: 
+                $month = 'March';
+                break;
+            case 4: 
+                $month = 'April';
+                break;            
+            case 5: 
+                $month = 'May';
+                break;
+            case 6: 
+                $month = 'June';
+                break;
+            case 7: 
+                $month = 'July';
+                break;
+            case 8: 
+                $month = 'August';
+                break;            
+            case 9: 
+                $month = 'September';
+                break;
+            case 10: 
+                $month = 'October';
+                break;
+            case 11: 
+                $month = 'November';
+                break;
+            case 12: 
+                $month = 'December';
                 break;         
         }
 

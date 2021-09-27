@@ -292,7 +292,9 @@ class Register extends Component
 
         $this->students = Student::with('attendance')->whereHas('attendance', function ($query) {
             $query->where('teacher_id', $this->teacherId);
-        })->get();
+        })
+        ->orderBy('name', 'asc')
+        ->get();
 
         $this->attendances = DB::table('attendances')
             ->where('attendances.teacher_id', '=', $this->teacherId)
