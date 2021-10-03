@@ -32,6 +32,7 @@ class Meals extends Component
     public $display_month;
     public $year;
     public $date;
+    public $full_date = [];
 
     public $showMealPlanDates = false;
     public $showStudentMealPlanLogger = false;
@@ -55,6 +56,11 @@ class Meals extends Component
 
     public function setStudentMealPlanLogger($day)
     {
+        $this->full_date = [
+            'day' => $day,
+            'month' => $this->month,
+            'year' => $this->year,
+        ];
         $this->showStudentMealPlanLogger = true;
         $this->showMealPlanDates = false;
         $this->aDay = $day;
@@ -96,13 +102,14 @@ class Meals extends Component
         }   
     }
 
-    public function addMeal($selection, $day, $student_id, $meal)
+    public function addMeal($selection, $meal, $student_id)
     {
+        $day = $this->full_date['day'];
         $month = $this->convertMonth($this->month);
         $year = $this->year;
         $student = Student::where('id', '=', $student_id)->first();
 
-        $entry_check = Meal::where('student_id', '=', $student_id)
+        $entry_check = Meal::where('student_id', '=', $student->id)
             ->where('day', '=', $day)
             ->where('month', '=', $month)
             ->where('year', '=', $year)
@@ -120,7 +127,7 @@ class Meals extends Component
         }
 
         if ($entry_check != null) {
-            $entry = Meal::where('student_id', '=', $student_id)
+            $entry = Meal::where('student_id', '=', $student->id)
                 ->where('day', '=', $day)
                 ->where('month', '=', $month)
                 ->where('year', '=', $year)
@@ -151,6 +158,11 @@ class Meals extends Component
         array_push($pass_to_export, $day, $month, (int) $year, $this->students);
 
         return Excel::download(new MealsExport($pass_to_export), 'meals'.'_'.$day.'_'.$this->month.'_'.$this->year.'.xlsx');
+    }
+
+    public function sayHello()
+    {
+        dd('Hello!');
     }
 
     public function hydrate()
